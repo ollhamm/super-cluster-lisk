@@ -28,27 +28,13 @@ Frontend application for SuperCluster Protocol – a DeFi protocol on Base Sepol
 npm install
 ```
 
-2. **Set up environment variables**
-   Create `.env.local` in the root directory:
-
-```env
-NEXT_PUBLIC_PROJECT_ID=your_walletconnect_project_id
-NEXT_PUBLIC_SUPERCLUSTER_ADDRESS=0x...
-NEXT_PUBLIC_PILOT_ADDRESS=0x...
-NEXT_PUBLIC_MOCK_USDC_ADDRESS=0x...
-NEXT_PUBLIC_FAUCET_ADDRESS=0x...
-NEXT_PUBLIC_WITHDRAW_MANAGER_ADDRESS=0x...
-NEXT_PUBLIC_STOKEN_ADDRESS=0x...
-NEXT_PUBLIC_WSTOKEN_ADDRESS=0x...
-```
-
-3. **Run development server**
+2. **Run development server**
 
 ```bash
 npm run dev
 ```
 
-4. **Open browser**
+3. **Open browser**
    Go to [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
