@@ -1,3 +1,3 @@
-import LidoWrapUnwrap from "../page";
+import Unwrap from "../page";
 
-export default LidoWrapUnwrap;
+export default Unwrap;

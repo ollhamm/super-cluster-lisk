@@ -79,7 +79,7 @@ export default function DefinitionSection() {
         {/* RIGHT SIDE */}
         <div className="relative pl-10">
           {/* Vertical line */}
-          <div className="absolute left-4 top-0 h-full w-[2px] bg-gradient-to-b from-[#0b84ba] to-transparent"></div>
+          <div className="absolute left-4 md:left-0 top-0 h-full w-[2px] bg-gradient-to-b from-[#0b84ba] to-transparent"></div>
 
           <div className="space-y-32">
             {items.map((item, i) => (
@@ -92,7 +92,7 @@ export default function DefinitionSection() {
                 className="relative bg-white/10 p-6 rounded border border-slate-700"
               >
                 {/* icon bubble */}
-                <div className="absolute -left-[52px] top-0 bg-white/10 backdrop-blur-xl p-3 rounded-full border border-white/20 shadow-lg">
+                <div className="absolute -left-[52px] md:-left-[4.3rem] top-0 bg-white/10 backdrop-blur-xl p-3 rounded-full border border-white/20 shadow-lg">
                   {item.icon}
                 </div>
 

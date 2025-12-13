@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AssetList } from "@/components/app/AssetList";
+import { AssetList } from "@/components/app/Lists";
 import { Bitcoin } from "lucide-react";
 
 export function CardDemo() {

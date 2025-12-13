@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CONTRACTS } from "@/services/web3/contracts/addresses";
-import { FiltersBar } from "@/components/landing/FiltersBar";
-import { AssetTable } from "@/components/landing/AssetTable";
+import { FiltersBar } from "@/components/app/FiltersBar";
+import { AssetTable } from "@/components/app/Table";
 import { PilotAsset } from "@/services/web3/contracts/types";
 
 const STORAGE_KEY = "supercluster.selectedPilot";
@@ -187,7 +187,7 @@ export default function OperatorPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4 pb-24">
+    <div className="flex flex-col gap-4 py-20 min-h-screen">
       <div>
         <FiltersBar
           selectedCategory={selectedCategory}
@@ -205,21 +205,6 @@ export default function OperatorPage() {
           onSelectPilot={handleSelectPilot}
         />
       </div>
-
-      {activePilot && (
-        <div className="rounded-2xl border border-slate-700/60 bg-slate-900/50 px-6 py-5 text-white shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">Active Pilot</h2>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            Deposits will route to{" "}
-            <span className="text-cyan-300 font-semibold">
-              {activePilot.name}
-            </span>{" "}
-            ({activePilot.symbol}) at{" "}
-            <span className="font-mono text-white">{activePilot.address}</span>.
-            Review the pilot’s strategies before confirming new positions.
-          </p>
-        </div>
-      )}
     </div>
   );
 }

@@ -2,19 +2,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Info,
-  ExternalLink,
   TrendingUp,
   Shield,
   Zap,
   Award,
-  Wallet,
-  Copy,
-  Check,
   AlertTriangle,
-  Target,
-  ActivitySquare,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
@@ -24,7 +17,10 @@ import { useStaking } from "@/hooks/useStaking";
 import { CONTRACTS } from "@/services/web3/contracts/addresses";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import Image from "next/image";
+import { DepositHeader } from "@/components/app/Deposit/Header";
+import { StakeCard } from "@/components/app/Deposit/StakeCard";
+import { StatsGrid } from "@/components/app/Deposit/StatsGrid";
+import { FaqSidebar } from "@/components/app/Deposit/FaqSidebar";
 
 export default function StakePage() {
   const [usdcAmount, setUsdcAmount] = useState("");
@@ -292,7 +288,7 @@ export default function StakePage() {
   ];
 
   return (
-    <div className="min-h-screen pb-24 text-white">
+    <div className="min-h-screen py-20 text-white">
       {/* No USDC Popup */}
       {showNoUSDCPopup && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -335,359 +331,38 @@ export default function StakePage() {
       )}
 
       <div className="max-w-7xl mx-auto">
-        {/* Hero Section */}
-        <div className="text-center mb-12 relative">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent">
-              Deposite & Earn Rewards
-            </span>
-          </h1>
+        <DepositHeader />
 
-          <p className="text-md text-slate-400 max-w-2xl mx-auto mb-8">
-            Stake your USDC and receive sUSDC while earning competitive rewards
-          </p>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <StakeCard
+            isConnected={isConnected}
+            isConnecting={isConnecting}
+            address={address}
+            usdcBalance={usdcBalance}
+            sUSDCBalance={sUSDCBalance}
+            stats={stats}
+            selectedPilotInfo={selectedPilotInfo}
+            onCopyAddress={handleCopyAddress}
+            copied={copied}
+            pilotCopied={pilotCopied}
+            onCopyPilot={handleCopyPilotAddress}
+            usdcAmount={usdcAmount}
+            onAmountChange={handleAmountChange}
+            onMax={handleMaxClick}
+            onStake={handleStake}
+            onConnect={handleConnect}
+            isStakeDisabled={isStakeDisabled}
+            getStakeButtonText={getStakeButtonText}
+            error={error ? getSimplifiedError(error) : null}
+          />
 
-          {/* Quick Stats Banner */}
-          <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
-            <div className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded-full backdrop-blur-sm">
-              <span className="text-xs text-slate-400">APR:</span>{" "}
-              <span className="text-sm font-semibold text-blue-400">
-                {stats.apr}
-              </span>
-            </div>
-            <div className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded-full backdrop-blur-sm">
-              <span className="text-xs text-slate-400">Total Staked:</span>{" "}
-              <span className="text-sm font-semibold text-cyan-400">
-                8.69M USDC
-              </span>
-            </div>
-            <div className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded-full backdrop-blur-sm">
-              <span className="text-xs text-slate-400">Stakers:</span>{" "}
-              <span className="text-sm font-semibold text-blue-400">569K+</span>
-            </div>
+          <div className="lg:col-span-1">
+            <FaqSidebar items={faqItems} />
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Staking Panel */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Staking Card */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 backdrop-blur-sm">
-              {/* Input Section */}
-              <div className="mb-6">
-                <label className="text-sm text-slate-400 mb-2 block">
-                  Amount to Deposit
-                </label>
-                <div className="relative">
-                  <div className="flex items-center gap-4 bg-slate-800/50 border border-slate-700 rounded-2xl p-4 hover:border-blue-500/50 transition-colors">
-                    <div className="flex items-center gap-3 flex-1">
-                      <Image
-                        src="/usdc.png"
-                        alt="USDC"
-                        width={48}
-                        height={48}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="0.00"
-                        value={usdcAmount}
-                        onChange={handleAmountChange}
-                        disabled={!isConnected || isSubmitting}
-                        className="bg-transparent border-none text-3xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 disabled:opacity-50"
-                      />
-                    </div>
-                    <button
-                      onClick={handleMaxClick}
-                      disabled={!isConnected || isSubmitting}
-                      className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-blue-400 font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      MAX
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Wallet Info - Only show when connected */}
-              {isConnected && address && (
-                <div className="mb-6 p-5 bg-gradient-to-r from-blue-900/20 to-cyan-900/20 border border-blue-500/20 rounded-2xl">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Available to stake */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Wallet className="w-4 h-4 text-blue-400" />
-                        <span className="text-xs text-slate-400 font-medium">
-                          Available to Deposit
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-white">
-                        {usdcBalance} USDC
-                      </div>
-                    </div>
-
-                    {/* Staked amount */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-cyan-400" />
-                        <span className="text-xs text-slate-400 font-medium">
-                          Deposited amount
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-white">
-                        {sUSDCBalance} sUSDC
-                      </div>
-                    </div>
-
-                    {/* Wallet Address */}
-                    <div className="space-y-1">
-                      <span className="text-xs text-slate-400 font-medium block">
-                        Wallet Address
-                      </span>
-                      <button
-                        onClick={handleCopyAddress}
-                        className="flex items-center gap-2 text-sm font-mono text-white hover:text-blue-400 transition-colors group"
-                      >
-                        <span>{formatAddress(address)}</span>
-                        {copied ? (
-                          <Check className="w-3.5 h-3.5 text-green-400" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        )}
-                      </button>
-                    </div>
-
-                    {/* APR */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400 font-medium">
-                          sUSDC APR
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-blue-400">
-                        {stats.apr}
-                      </div>
-                    </div>
-
-                    {/* Selected Pilot */}
-                    <div className="space-y-1 sm:col-span-2">
-                      <div className="flex items-center gap-2">
-                        <Target className="w-4 h-4 text-cyan-300" />
-                        <span className="text-xs text-slate-400 font-medium">
-                          Selected pilot
-                        </span>
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-                        <span className="text-lg font-semibold text-white">
-                          {selectedPilotInfo?.name ?? "Atlas Core Pilot"}
-                        </span>
-                        <Link
-                          href="/app/pilot"
-                          className="text-xs text-cyan-300 hover:text-cyan-200 transition-colors"
-                        >
-                          Manage pilots
-                        </Link>
-                      </div>
-                      <button
-                        onClick={handleCopyPilotAddress}
-                        className="flex items-center gap-2 text-sm font-mono text-white/80 hover:text-cyan-300 transition-colors group"
-                      >
-                        <span>
-                          {formatAddress(selectedPilotInfo?.address ?? "")}
-                        </span>
-                        {pilotCopied ? (
-                          <Check className="w-3.5 h-3.5 text-green-400" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* You will receive */}
-              <div className="mb-8">
-                <label className="text-sm text-slate-400 mb-2 block">
-                  You will receive
-                </label>
-                <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-4">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <Image
-                      src="/susdc.png"
-                      alt="sUSDC"
-                      width={48}
-                      height={48}
-                      className="flex-shrink-0 rounded-full"
-                    />
-                    <div className="text-3xl font-semibold text-white truncate">
-                      {usdcAmount || "0.0000"} sUSDC
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-xl">
-                  <p className="text-red-400 text-sm">
-                    {getSimplifiedError(error)}
-                  </p>
-                </div>
-              )}
-
-              {/* Connect/Stake Button */}
-              {isConnected ? (
-                <Button
-                  onClick={handleStake}
-                  disabled={isStakeDisabled()}
-                  className={`w-full h-14 font-bold text-lg rounded-xl shadow-lg transition-all disabled:cursor-not-allowed disabled:shadow-none ${
-                    isStakeDisabled()
-                      ? "bg-slate-700 text-slate-400 border border-slate-600"
-                      : "w-full h-14 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium text-lg rounded-xl transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
-                  }`}
-                >
-                  {getStakeButtonText()}
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleConnect}
-                  disabled={isConnecting}
-                  className="w-full h-14 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isConnecting ? "Connecting..." : "Connect Wallet"}
-                </Button>
-              )}
-
-              {/* Transaction Info */}
-              <div className="mt-6 space-y-3 p-4 bg-slate-800/30 border border-slate-700/50 rounded-xl">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Exchange Rate</span>
-                  <span className="text-white font-medium">
-                    1 USDC = 1 sUSDC
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Network Fee</span>
-                  <span className="text-white font-medium">~$0.92</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    Reward Fee
-                    <Info className="w-3.5 h-3.5" />
-                  </span>
-                  <span className="text-white font-medium">10%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <span className="text-sm text-slate-400">Total Staked</span>
-                </div>
-                <p className="text-2xl font-bold text-white">
-                  {stats.totalStaked}
-                </p>
-              </div>
-
-              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center">
-                    <ActivitySquare className="w-5 h-5 text-cyan-400" />
-                  </div>
-                  <span className="text-sm text-slate-400">Active Stakers</span>
-                </div>
-                <p className="text-2xl font-bold text-white">{stats.stakers}</p>
-              </div>
-
-              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                    <Award className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <span className="text-sm text-slate-400">Market Cap</span>
-                </div>
-                <p className="text-2xl font-bold text-white">
-                  {stats.marketCap}
-                </p>
-              </div>
-            </div>
-
-            {/* Info Banner */}
-            <div className="p-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-500/30 rounded-2xl">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Info className="w-6 h-6 text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg mb-2">
-                    How does it work?
-                  </h3>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-3">
-                    When you stake USDC, you receive sUSDC tokens that represent
-                    your staked USDC plus all accrued rewards. Your sUSDC
-                    balance automatically increases daily as you earn Deposit
-                    rewards.
-                  </p>
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
-                  >
-                    Learn more about liquid Deposit
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* FAQ Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <h3 className="text-2xl font-bold mb-6 text-gray-300">
-                Common Questions
-              </h3>
-              <div className="space-y-3">
-                {faqItems.map((item, index) => {
-                  const Icon = item.icon;
-                  const isExpanded = expandedFaq === index;
-
-                  return (
-                    <div
-                      key={index}
-                      className="bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm hover:border-slate-700 transition-colors"
-                    >
-                      <button
-                        onClick={() =>
-                          setExpandedFaq(isExpanded ? null : index)
-                        }
-                        className="w-full p-5 text-left flex items-start gap-3 hover:bg-slate-800/30 transition-colors"
-                      >
-                        <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Icon className="w-4 h-4 text-blue-400" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-white text-sm leading-snug">
-                            {item.question}
-                          </h4>
-                        </div>
-                      </button>
-                      {isExpanded && (
-                        <div className="px-5 pb-5">
-                          <p className="text-sm text-slate-400 leading-relaxed pl-11">
-                            {item.answer}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+        <div className="mt-8 space-y-8">
+          <StatsGrid stats={stats} />
         </div>
       </div>
     </div>

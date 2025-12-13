@@ -10,8 +10,12 @@ const DEFAULT_TECH_ICONS: TechIcon[] = [
     icon: "/icons/usdt-logo.svg",
   },
   {
-    name: "usdt",
+    name: "wsusdc",
     icon: "/wsusdc.png",
+  },
+  {
+    name: "susdc",
+    icon: "/susdc.png",
   },
   {
     name: "uni",

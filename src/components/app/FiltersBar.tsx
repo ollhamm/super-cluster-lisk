@@ -43,15 +43,15 @@ export function FiltersBar({
       <div className="hidden md:flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px] bg-gray-800/40 border-gray-700 text-gray-300 hover:bg-[#252633] focus:ring-blue-500">
+            <SelectTrigger className="w-[180px] bg-white/10 border-white/10 text-gray-300 hover:bg-white/20">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
-            <SelectContent className="bg-gray-900 border-none">
+            <SelectContent className="bg-black border-white/10">
               {CATEGORIES.map((category) => (
                 <SelectItem
                   key={category}
                   value={category}
-                  className="text-gray-300 focus:bg-gray-800 hover:text-white hober:bg-gray-800 focus:text-blue-500"
+                  className="text-gray-300 focus:bg-white/20 hover:text-white hover:bg-white/10 focus:text-[#0b84ba]"
                 >
                   {category}
                 </SelectItem>
@@ -68,7 +68,7 @@ export function FiltersBar({
               placeholder="Search name or paste address"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800/40 border-gray-700 text-gray-300 placeholder:text-gray-500 rounded-lg text-sm w-80 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="pl-10 pr-4 py-2 bg-white/10 border-white/10 text-gray-300 placeholder:text-gray-500 rounded text-sm w-80 focus:ring-1 focus:ring-white/10 "
             />
           </div>
         </div>
@@ -84,7 +84,7 @@ export function FiltersBar({
             placeholder="Search pilots..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-10 py-2.5 bg-[#1a1b26] border-gray-700 text-gray-300 placeholder:text-gray-500 rounded-lg text-sm w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="pl-10 pr-10 py-2.5 bg-[#1a1b26] border-gray-700 text-gray-300 placeholder:text-gray-500 rounded text-sm w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           {searchQuery && (
             <Button
@@ -104,7 +104,7 @@ export function FiltersBar({
             <SelectTrigger className="flex-1 bg-[#1a1b26] border-gray-700 text-gray-300 hover:bg-[#252633] focus:ring-blue-500 h-10">
               <div className="flex items-center gap-2 w-full">
                 <SlidersHorizontal className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <SelectValue placeholder="Category" />
+                <SelectValue placeholder="Category" />
               </div>
             </SelectTrigger>
             <SelectContent className="bg-[#1a1b26] border-gray-700">

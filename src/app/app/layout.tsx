@@ -21,7 +21,9 @@ export default async function AppLayout({
   return (
     <WagmiProviderComp initialState={initialState}>
       <AppNavbar />
-      <main className="w-full min-h-screen px-4">{children}</main>
+      <main className="w-full min-h-screen max-w-7xl mx-auto px-4">
+        {children}
+      </main>
     </WagmiProviderComp>
   );
 }

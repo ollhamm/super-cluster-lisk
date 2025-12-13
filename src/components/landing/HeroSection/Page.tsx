@@ -7,7 +7,7 @@ export default function HeroSection() {
     <>
       <Geometri>
         <div
-          className={` flex flex-col justify-center items-center h-[74vh] text-center text-gray-200 px-4`}
+          className={` flex flex-col justify-center items-center h-[80vh] text-center text-gray-200 px-4`}
         >
           <h1 className="text-3xl md:text-5xl max-w-4xl font-normal text-white">
             Optimized yield for stablecoin holders Designed for performance and
@@ -15,7 +15,7 @@ export default function HeroSection() {
           </h1>
         </div>
       </Geometri>
-      <section className="min-h-screen flex items-center justify-center">
+      <section className="py-20 flex items-center justify-center">
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
             <div>

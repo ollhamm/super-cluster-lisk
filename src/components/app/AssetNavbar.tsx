@@ -1,14 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  WalletIcon,
-  Bars3Icon,
-  XMarkIcon,
-  ClipboardDocumentIcon,
-  ArrowTopRightOnSquareIcon,
-  PowerIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
+  Wallet,
+  Menu,
+  X,
+  Clipboard,
+  ExternalLink,
+  Power,
+  ChevronDown,
+} from "lucide-react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect } from "wagmi";
 import {
@@ -19,12 +19,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export interface NavLink {
   name: string;
   href: string;
   active?: boolean;
-  dropdown?: { label: string; items: { name: string; href: string }[] };
+  icon?: React.ElementType;
+  dropdown?: {
+    label: string;
+    items: { name: string; href: string; icon?: React.ElementType }[];
+  };
 }
 
 interface NavbarProps {
@@ -42,20 +47,28 @@ export function Navbar({ links }: NavbarProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      const update = () => {
+        const current = window.scrollY;
 
-      // Set scrolled state for background
-      setScrolled(currentScrollY > 10);
+        setScrolled(current > 10);
 
-      // Hide navbar when scrolling down, show when scrolling up
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setVisible(false);
-      } else {
-        setVisible(true);
+        if (current > lastScrollY && current > 100) {
+          setVisible(false);
+        } else {
+          setVisible(true);
+        }
+
+        setLastScrollY(current);
+        ticking = false;
+      };
+
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
       }
-
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -72,87 +85,95 @@ export function Navbar({ links }: NavbarProps) {
       await open();
     } catch (error) {
       setError("Failed to connect wallet. Please try again.");
-      console.error("Wallet connection error:", error);
     }
   };
 
   return (
     <>
       <nav
-        className={`sticky top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`sticky top-0 left-0 w-full z-50 transition-all duration-600 ${
           scrolled ? "backdrop-blur-xl " : "bg-transparent"
         } ${visible ? "translate-y-0" : "-translate-y-full"}`}
-        style={{
-          transition: "transform 0.3s ease-in-out, background-color 0.3s",
-        }}
       >
-        <div className="max-w-7xl mx-auto px-4 ">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <span className="text-lg font-bold bg-gradient-to-r text-[#0b84ba] hidden sm:block">
-                SuperCluster
-              </span>
-            </Link>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
+            {/* Left Section: Logo + Menu */}
+            <div className="flex items-center gap-8">
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-2 group">
+                <Image src="/logo1.png" alt="Logo" width={60} height={60} />
+              </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              {links.map((link) =>
-                link.dropdown ? (
-                  <DropdownMenu key={link.name}>
-                    <DropdownMenuTrigger
-                      className={`relative px-1 py-2 text-sm font-medium transition-colors outline-none group ${
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center gap-6">
+                {links.map((link) =>
+                  link.dropdown ? (
+                    <DropdownMenu key={link.name}>
+                      <DropdownMenuTrigger
+                        className={`relative px-1 py-2 text-sm font-medium uppercase transition-colors outline-none group ${
+                          link.active
+                            ? "text-white"
+                            : "text-slate-400 hover:text-white"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {link.icon &&
+                            React.createElement(link.icon, {
+                              className: "w-4 h-4",
+                            })}
+                          <span>{link.name}</span>
+                          <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 duration-200" />
+                        </span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-md border border-slate-800 shadow-xl rounded-xl mt-2 min-w-[160px]">
+                        {link.dropdown.items.map((item) => (
+                          <DropdownMenuItem key={item.name} asChild>
+                            <Link
+                              href={item.href}
+                              className="px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 cursor-pointer transition-colors rounded-lg"
+                            >
+                              <span className="flex items-center gap-2">
+                                {item.icon &&
+                                  React.createElement(item.icon, {
+                                    className: "w-4 h-4",
+                                  })}
+
+                                <span>{item.name}</span>
+                              </span>
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`relative px-1 py-2 text-sm font-medium uppercase transition-colors ${
                         link.active
                           ? "text-white"
                           : "text-slate-400 hover:text-white"
                       }`}
                     >
-                      <span className="flex items-center gap-1">
-                        {link.name}
-                        <ChevronDownIcon className="w-3.5 h-3.5 transition-transform group-hover:rotate-180 duration-200" />
+                      <span className="flex items-center gap-2">
+                        {link.icon &&
+                          React.createElement(link.icon, {
+                            className: "w-4 h-4",
+                          })}
+                        <span>{link.name}</span>
                       </span>
-                      {link.active && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0b84ba] rounded" />
-                      )}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-md border border-slate-800 shadow-xl rounded-xl mt-2 min-w-[160px]">
-                      {link.dropdown.items.map((item) => (
-                        <DropdownMenuItem key={item.name} asChild>
-                          <Link
-                            href={item.href}
-                            className="px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 cursor-pointer transition-colors rounded-lg"
-                          >
-                            {item.name}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`relative px-1 py-2 text-md transition-colors ${
-                      link.active
-                        ? "text-white"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    {link.name}
-                    {link.active && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0b84ba] rounded-full" />
-                    )}
-                  </Link>
-                )
-              )}
+                    </Link>
+                  )
+                )}
+              </div>
             </div>
 
-            {/* Right Section */}
+            {/* Right Section: Connect Wallet + Mobile Menu */}
             <div className="flex items-center gap-3">
               {/* Connect Wallet - Desktop */}
               {isConnected && address ? (
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="hidden md:flex items-center gap-2 px-4 py-2 rounded bg-[#0b84ba] hover:bg-[#0973a3] text-white text-sm font-medium transition-all duration-300 outline-none">
+                  <DropdownMenuTrigger className="hidden md:flex items-center gap-2 px-4 py-3 primary-button rounded  text-center font-medium text-white text-sm transition-all duration-300 outline-none">
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                     <span>{formatAddress(address)}</span>
                   </DropdownMenuTrigger>
@@ -167,7 +188,7 @@ export function Navbar({ links }: NavbarProps) {
                       onClick={() => navigator.clipboard.writeText(address)}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white bg-gray-800 hover:bg-gray-700 cursor-pointer transition-colors rounded m-1"
                     >
-                      <ClipboardDocumentIcon className="w-4 h-4" />
+                      <Clipboard className="w-4 h-4" />
                       Copy Address
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -179,7 +200,7 @@ export function Navbar({ links }: NavbarProps) {
                       }
                       className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 cursor-pointer transition-colors rounded m-1"
                     >
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                      <ExternalLink className="w-4 h-4" />
                       View Explorer
                     </DropdownMenuItem>
                     <div className="border-t border-slate-800 mt-1 pt-1">
@@ -187,7 +208,7 @@ export function Navbar({ links }: NavbarProps) {
                         onClick={() => disconnect()}
                         className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 cursor-pointer transition-colors rounded m-1"
                       >
-                        <PowerIcon className="w-4 h-4" />
+                        <Power className="w-4 h-4" />
                         Disconnect
                       </DropdownMenuItem>
                     </div>
@@ -197,22 +218,23 @@ export function Navbar({ links }: NavbarProps) {
                 <button
                   onClick={handleConnect}
                   disabled={isConnecting}
-                  className="hidden md:flex items-center w-full sm:w-auto justify-center bg-[#0b84ba] hover:bg-[#0973a3] text-white px-4 py-2 gap-1 text-sm font-normal rounded transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="hidden md:flex items-center justify-center px-4 py-3 primary-button rounded  text-center font-medium gap-1 text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <WalletIcon className="w-4 h-4" />
-                  {isConnecting ? "Connecting..." : "Connect"}
+                  <Wallet className="w-4 h-4" />
+                  {isConnecting ? "Connecting..." : "Connect Wallet"}
                 </button>
               )}
 
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-white transition-colors border border-slate-700"
+                className="md:hidden p-2 rounded-lg hover:bg-slate-800/50 transition-colors"
+                aria-label="Toggle menu"
               >
                 {menuOpen ? (
-                  <XMarkIcon className="w-5 h-5" />
+                  <X className="w-6 h-6 text-white" />
                 ) : (
-                  <Bars3Icon className="w-5 h-5" />
+                  <Menu className="w-6 h-6 text-white" />
                 )}
               </button>
             </div>
@@ -231,25 +253,23 @@ export function Navbar({ links }: NavbarProps) {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="sticky top-16 left-0 w-full bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl z-40 md:hidden"
+            className="md:hidden fixed top-16 left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-slate-800 z-40"
           >
-            <div className="px-4 py-4 space-y-1">
+            <div className="max-w-7xl mx-auto px-4 py-4 space-y-3">
               {/* Mobile Navigation Links */}
               {links.map((link) =>
                 link.dropdown ? (
-                  <div key={link.name} className="space-y-1">
-                    <div
-                      className={`px-3 py-2 text-sm font-medium rounded-lg ${
-                        link.active
-                          ? "text-white bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-l-2 border-blue-500"
-                          : "text-slate-400"
-                      }`}
-                    >
-                      {link.name}
+                  <div key={link.name} className="space-y-2">
+                    <div className="px-4 py-2 text-slate-300 font-medium flex items-center gap-2">
+                      {link.icon &&
+                        React.createElement(link.icon, {
+                          className: "w-4 h-4",
+                        })}
+                      <span>{link.name}</span>
                     </div>
                     <div className="pl-4 space-y-1">
                       {link.dropdown.items.map((item) => (
@@ -257,9 +277,15 @@ export function Navbar({ links }: NavbarProps) {
                           key={item.name}
                           href={item.href}
                           onClick={() => setMenuOpen(false)}
-                          className="block px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
+                          className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
                         >
-                          {item.name}
+                          <span className="flex items-center gap-2">
+                            {item.icon &&
+                              React.createElement(item.icon, {
+                                className: "w-4 h-4",
+                              })}
+                            <span>{item.name}</span>
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -269,22 +295,24 @@ export function Navbar({ links }: NavbarProps) {
                     key={link.name}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className={`block px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      link.active
-                        ? "text-white bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-l-2 border-blue-500"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                    }`}
+                    className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
                   >
-                    {link.name}
+                    <span className="flex items-center gap-2">
+                      {link.icon &&
+                        React.createElement(link.icon, {
+                          className: "w-4 h-4",
+                        })}
+                      <span>{link.name}</span>
+                    </span>
                   </Link>
                 )
               )}
 
               {/* Mobile Connect Wallet */}
-              <div className="pt-3 mt-3 border-t border-slate-800">
+              <div className="pt-3 border-t border-slate-800">
                 {isConnected && address ? (
                   <div className="space-y-2">
-                    <div className="px-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg">
+                    <div className="px-4 py-2.5 bg-slate-800/50 rounded-lg">
                       <p className="text-xs text-slate-400">Connected</p>
                       <p className="text-sm text-white font-mono mt-1">
                         {formatAddress(address)}
@@ -295,9 +323,9 @@ export function Navbar({ links }: NavbarProps) {
                         navigator.clipboard.writeText(address);
                         setMenuOpen(false);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
                     >
-                      <ClipboardDocumentIcon className="w-4 h-4" />
+                      <Clipboard className="w-4 h-4" />
                       Copy Address
                     </button>
                     <button
@@ -308,9 +336,9 @@ export function Navbar({ links }: NavbarProps) {
                         );
                         setMenuOpen(false);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
                     >
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                      <ExternalLink className="w-4 h-4" />
                       View Explorer
                     </button>
                     <button
@@ -318,9 +346,9 @@ export function Navbar({ links }: NavbarProps) {
                         disconnect();
                         setMenuOpen(false);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
                     >
-                      <PowerIcon className="w-4 h-4" />
+                      <Power className="w-4 h-4" />
                       Disconnect
                     </button>
                   </div>
@@ -331,9 +359,9 @@ export function Navbar({ links }: NavbarProps) {
                       setMenuOpen(false);
                     }}
                     disabled={isConnecting}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-sm font-medium transition-all shadow-lg shadow-blue-500/25"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 primary-button rounded text-center font-medium text-sm transition-all"
                   >
-                    <WalletIcon className="w-4 h-4" />
+                    <Wallet className="w-4 h-4" />
                     {isConnecting ? "Connecting..." : "Connect Wallet"}
                   </button>
                 )}

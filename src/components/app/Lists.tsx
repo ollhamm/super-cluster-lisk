@@ -16,7 +16,7 @@ export function AssetListItem({
   apyLabel = "fixed APY",
 }: AssetListItemProps) {
   return (
-    <div className="py-2 px-4 rounded-md bg-gray-500/10">
+    <div className="py-2 px-4 rounded bg-gray-500/10">
       <div className="flex flex-row justify-between mx-auto">
         <div className="flex flex-row gap-1 items-center justify-start">
           <div className="flex flex-row gap-2">
