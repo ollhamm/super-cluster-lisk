@@ -13,11 +13,11 @@ import {
 import { encodeFunctionData } from "viem";
 
 import { Button } from "@/components/ui/button";
-import { useUSDCBalance } from "@/hooks/useTokenBalance";
+import { useUSDCBalance, useSTokenBalance } from "@/hooks/useTokenBalance";
 import {
   CONTRACTS,
   NETWORK_INFO,
-  isBaseSepolia,
+  isCorrectChain,
 } from "@/services/web3/contracts/addresses";
 import { FAUCET_ABI } from "@/services/web3/contracts/abis/Faucet";
 
@@ -70,24 +70,32 @@ export default function FaucetPage() {
   const { login } = useLogin();
   const { ready, authenticated } = usePrivy();
   const { wallets } = useWallets();
-  const { address, chainId: wagmiChainId } = useAccount();
+  const { address: wagmiAddress } = useAccount();
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
-  const { formatted: usdcBalance, refetch } = useUSDCBalance();
 
-  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Get embedded wallet from Privy if exists
+  // Get embedded wallet from Privy
   const embeddedWallet = wallets.find(
     (wallet) => wallet.walletClientType === "privy"
   );
+  // Get address from Privy embedded wallet or fallback to Wagmi
+  const address = embeddedWallet?.address || wagmiAddress;
+
+  const { formatted: usdcBalance, refetch: refetchUSDC } = useUSDCBalance(
+    address as `0x${string}`
+  );
+  const { formatted: sUSDCBalance, refetch: refetchSToken } = useSTokenBalance(
+    address as `0x${string}`
+  );
+
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Use chainId from embedded wallet if available, otherwise from Wagmi
   const chainId = embeddedWallet?.chainId
     ? typeof embeddedWallet.chainId === "string"
       ? parseInt(embeddedWallet.chainId.replace("eip155:", ""))
       : embeddedWallet.chainId
-    : wagmiChainId;
+    : undefined;
 
   // Check if user is authenticated via Privy (has embedded wallet) or connected via Wagmi
   const isConnected = ready && (authenticated || !!address);
@@ -97,7 +105,9 @@ export default function FaucetPage() {
     const connectWallet = async () => {
       if (authenticated && embeddedWallet && !address) {
         try {
-          await embeddedWallet.switchChain(84532); // Base Sepolia
+          await embeddedWallet.switchChain(
+            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "")
+          );
         } catch (err) {
           console.error("Failed to switch chain:", err);
         }
@@ -150,8 +160,8 @@ export default function FaucetPage() {
       return;
     }
 
-    if (!isBaseSepolia(chainId)) {
-      const message = "Please switch to Base Sepolia to use the faucet.";
+    if (!isCorrectChain(chainId)) {
+      const message = "Please switch to the correct network to use the faucet.";
       setError(message);
       return;
     }
@@ -196,7 +206,8 @@ export default function FaucetPage() {
 
       setTxHash(hash);
       await publicClient?.waitForTransactionReceipt({ hash });
-      await refetch?.();
+      await refetchUSDC();
+      await refetchSToken();
     } catch (err) {
       console.error("Faucet request failed", err);
       const message = getErrorMessage(err);

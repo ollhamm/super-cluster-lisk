@@ -4,7 +4,7 @@ import { CONTRACTS, TOKEN_DECIMALS } from "@/services/web3/contracts/addresses";
 import { STOKEN_ABI } from "@/services/web3/contracts/abis/SToken";
 import { WSTOKEN_ABI } from "@/services/web3/contracts/abis/WsToken";
 
-export function useUSDCBalance() {
+export function useUSDCBalance(accountAddress?: `0x${string}`) {
   const formatTokenBalanceFloor = (raw: bigint, decimals: number) => {
     if (raw === BigInt(0)) return "0";
 
@@ -41,7 +41,8 @@ export function useUSDCBalance() {
     return fraction ? `${whole}.${fraction}` : whole;
   };
 
-  const { address } = useAccount();
+  const { address: wagmiAddress } = useAccount();
+  const address = accountAddress || wagmiAddress;
 
   const {
     data: balance,
@@ -70,7 +71,7 @@ export function useUSDCBalance() {
   };
 }
 
-export function useSTokenBalance() {
+export function useSTokenBalance(accountAddress?: `0x${string}`) {
   const formatTokenBalanceFloor = (raw: bigint, decimals: number) => {
     if (raw === BigInt(0)) return "0";
 
@@ -106,7 +107,8 @@ export function useSTokenBalance() {
 
     return fraction ? `${whole}.${fraction}` : whole;
   };
-  const { address } = useAccount();
+  const { address: wagmiAddress } = useAccount();
+  const address = accountAddress || wagmiAddress;
 
   // Get sToken address from SuperCluster
   const { data: sTokenAddress } = useReadContract({

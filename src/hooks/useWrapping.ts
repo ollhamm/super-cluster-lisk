@@ -4,7 +4,7 @@ import { parseUnits } from "viem";
 import {
   CONTRACTS,
   TOKEN_DECIMALS,
-  isBaseSepolia,
+  isCorrectChain,
 } from "@/services/web3/contracts/addresses";
 import { STOKEN_ABI } from "@/services/web3/contracts/abis/SToken";
 import { WSTOKEN_ABI } from "@/services/web3/contracts/abis/WsToken";

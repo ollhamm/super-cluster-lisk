@@ -9,7 +9,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useLogin, usePrivy, useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
 import { useUSDCBalance, useSTokenBalance } from "@/hooks/useTokenBalance";
 import { getSimplifiedError } from "@/services/web3/utils/getSimplifiedError";
@@ -29,14 +29,38 @@ export default function StakePage() {
   const [showNoUSDCPopup, setShowNoUSDCPopup] = useState(false);
   const [, setShowInsufficientPopup] = useState(false);
 
-  const { open } = useWeb3Modal();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { login } = useLogin();
+  const { ready, authenticated } = usePrivy();
+  const { wallets } = useWallets();
+  const { address: wagmiAddress, chainId: wagmiChainId } = useAccount();
 
-  const { formatted: usdcBalance, refetch: refetchUSDC } = useUSDCBalance();
-  const { formatted: sUSDCBalance, refetch: refetchSToken } =
-    useSTokenBalance();
+  // Get embedded wallet from Privy
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType === "privy"
+  );
 
-  const { stake, isSubmitting, error, resetError } = useStaking();
+  // Get address and chainId from Privy embedded wallet or fallback to Wagmi
+  const address = embeddedWallet?.address || wagmiAddress;
+  const chainId = embeddedWallet
+    ? parseInt(embeddedWallet.chainId.replace("eip155:", ""))
+    : wagmiChainId;
+
+  // Connection status
+  const isConnected = ready && (authenticated || !!wagmiAddress);
+  const isConnecting = false;
+
+  const { formatted: usdcBalance, refetch: refetchUSDC } = useUSDCBalance(
+    address as `0x${string}`
+  );
+  const { formatted: sUSDCBalance, refetch: refetchSToken } = useSTokenBalance(
+    address as `0x${string}`
+  );
+
+  const { stake, isSubmitting, error, resetError } = useStaking(
+    address as `0x${string}`,
+    chainId,
+    embeddedWallet
+  );
   const pilotCopyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const pilotDirectory = useMemo(() => {
@@ -176,7 +200,7 @@ export default function StakePage() {
   const handleConnect = async () => {
     try {
       resetError();
-      await open();
+      await login();
     } catch (err) {
       console.error("Connection error:", err);
     }
@@ -184,6 +208,12 @@ export default function StakePage() {
 
   // handle Deposit
   const handleStake = async () => {
+    // Check if connected first, like in faucet
+    if (!isConnected) {
+      await handleConnect();
+      return;
+    }
+
     const toastId = toast.loading("Waiting for wallet confirmation...");
     try {
       await stake(usdcAmount);
@@ -243,6 +273,20 @@ export default function StakePage() {
       }
     };
   }, []);
+
+  // Auto-switch chain for Privy embedded wallet
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (authenticated && embeddedWallet) {
+        try {
+          await embeddedWallet.switchChain(84532); // Base Sepolia
+        } catch (err) {
+          console.error("Failed to switch chain:", err);
+        }
+      }
+    };
+    connectWallet();
+  }, [authenticated, embeddedWallet]);
 
   const faqItems = [
     {

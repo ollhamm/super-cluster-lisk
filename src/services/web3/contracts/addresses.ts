@@ -38,8 +38,8 @@ export const TOKEN_DECIMALS = {
   WSUSDC: 18,
 } as const;
 
-// Base Sepolia Chain ID
-export const CHAIN_ID = 84532;
+// Current Chain ID from env
+export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "84532");
 
 // Helper function - simplified
 export function getContractAddress(
@@ -49,19 +49,19 @@ export function getContractAddress(
 }
 
 // Validation helpers
-export function isBaseSepolia(chainId: number | undefined): boolean {
+export function isCorrectChain(chainId: number | undefined): boolean {
   return chainId === CHAIN_ID;
 }
 
 export function isSupportedChain(chainId: number | undefined): boolean {
-  return isBaseSepolia(chainId);
+  return isCorrectChain(chainId);
 }
 
 // Network info
 export const NETWORK_INFO = {
-  name: "Base Sepolia",
+  name: process.env.NEXT_PUBLIC_CHAIN_NAME || "",
   chainId: CHAIN_ID,
   currency: "ETH",
-  rpcUrl: "https://sepolia.base.org",
-  explorer: "https://sepolia.basescan.org",
+  rpcUrl: process.env.NEXT_PUBLIC_RPC_URL || "",
+  explorer: process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL || "",
 } as const;
