@@ -5,7 +5,8 @@ import { http } from "wagmi";
  * Uses /api/rpc in production to avoid CORS issues
  */
 export function getRpcUrl(): string {
-  const baseUrl = process.env.NEXT_PUBLIC_RPC_URL || "";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.testnet.mantle.xyz";
 
   // Server-side: always use direct RPC
   if (typeof window === "undefined") {
@@ -17,7 +18,12 @@ export function getRpcUrl(): string {
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1";
 
-  return isLocalhost ? baseUrl : "/api/rpc";
+  if (isLocalhost) {
+    return baseUrl;
+  }
+
+  // Production: use full URL to proxy
+  return `${window.location.origin}/api/rpc`;
 }
 
 /**
