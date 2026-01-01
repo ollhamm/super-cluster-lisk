@@ -5,7 +5,13 @@ import {
   usePublicClient,
   useWriteContract,
 } from "wagmi";
-import { parseUnits, decodeEventLog, type Address } from "viem";
+import {
+  parseUnits,
+  decodeEventLog,
+  encodeFunctionData,
+  type Address,
+} from "viem";
+import type { ConnectedWallet } from "@privy-io/react-auth";
 
 import {
   CONTRACTS,
@@ -48,8 +54,15 @@ function resolveErrorMessage(error: unknown): string {
   return "An error occurred. Please try again.";
 }
 
-export function useWithdrawActions() {
-  const { address, isConnected, chainId } = useAccount();
+export function useWithdrawActions(
+  accountAddress?: Address,
+  accountChainId?: number,
+  embeddedWallet?: ConnectedWallet
+) {
+  const { address: wagmiAddress, chainId: wagmiChainId } = useAccount();
+  const address = accountAddress || wagmiAddress;
+  const chainId = accountChainId || wagmiChainId;
+  const isConnected = !!address;
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
@@ -96,12 +109,40 @@ export function useWithdrawActions() {
       try {
         const pilotAddress = resolveSelectedPilot();
 
-        const txHash = await writeContractAsync({
-          address: CONTRACTS.superCluster,
-          abi: SUPERCLUSTER_ABI,
-          functionName: "withdraw",
-          args: [pilotAddress, CONTRACTS.mockUSDC, amountBigInt],
-        });
+        let txHash: `0x${string}`;
+
+        // If using Privy embedded wallet, use wallet client directly
+        if (embeddedWallet) {
+          const walletClient = await embeddedWallet.getEthereumProvider();
+          const [userAddress] = (await walletClient.request({
+            method: "eth_accounts",
+          })) as [string];
+
+          const data = encodeFunctionData({
+            abi: SUPERCLUSTER_ABI,
+            functionName: "withdraw",
+            args: [pilotAddress, CONTRACTS.mockUSDC, amountBigInt],
+          });
+
+          txHash = (await walletClient.request({
+            method: "eth_sendTransaction",
+            params: [
+              {
+                from: userAddress,
+                to: CONTRACTS.superCluster,
+                data,
+              },
+            ],
+          })) as `0x${string}`;
+        } else {
+          // Use Wagmi for external wallets
+          txHash = await writeContractAsync({
+            address: CONTRACTS.superCluster,
+            abi: SUPERCLUSTER_ABI,
+            functionName: "withdraw",
+            args: [pilotAddress, CONTRACTS.mockUSDC, amountBigInt],
+          });
+        }
 
         setRequestTxHash(txHash);
 
@@ -166,12 +207,40 @@ export function useWithdrawActions() {
       setClaimingId(requestId.toString());
 
       try {
-        const txHash = await writeContractAsync({
-          address: CONTRACTS.withdrawManager,
-          abi: WITHDRAW_MANAGER_ABI,
-          functionName: "claim",
-          args: [requestId],
-        });
+        let txHash: `0x${string}`;
+
+        // If using Privy embedded wallet, use wallet client directly
+        if (embeddedWallet) {
+          const walletClient = await embeddedWallet.getEthereumProvider();
+          const [userAddress] = (await walletClient.request({
+            method: "eth_accounts",
+          })) as [string];
+
+          const data = encodeFunctionData({
+            abi: WITHDRAW_MANAGER_ABI,
+            functionName: "claim",
+            args: [requestId],
+          });
+
+          txHash = (await walletClient.request({
+            method: "eth_sendTransaction",
+            params: [
+              {
+                from: userAddress,
+                to: CONTRACTS.withdrawManager,
+                data,
+              },
+            ],
+          })) as `0x${string}`;
+        } else {
+          // Use Wagmi for external wallets
+          txHash = await writeContractAsync({
+            address: CONTRACTS.withdrawManager,
+            abi: WITHDRAW_MANAGER_ABI,
+            functionName: "claim",
+            args: [requestId],
+          });
+        }
 
         await publicClient?.waitForTransactionReceipt({ hash: txHash });
         return txHash;

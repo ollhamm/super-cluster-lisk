@@ -6,7 +6,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { AlertTriangle, ExternalLink, Check, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useLogin, usePrivy, useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
 
 import { NETWORK_INFO } from "@/services/web3/contracts/addresses";
@@ -35,15 +35,32 @@ export default function WithdrawalsPage() {
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeTab = pathname === "/app/withdraw/claim" ? "claim" : "request";
 
-  const { open } = useWeb3Modal();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { login } = useLogin();
+  const { ready, authenticated } = usePrivy();
+  const { wallets } = useWallets();
+  const { address: wagmiAddress, chainId: wagmiChainId } = useAccount();
+
+  // Get embedded wallet from Privy
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType === "privy"
+  );
+
+  // Get address and chainId from Privy embedded wallet or fallback to Wagmi
+  const address = embeddedWallet?.address || wagmiAddress;
+  const chainId = embeddedWallet
+    ? parseInt(embeddedWallet.chainId.replace("eip155:", ""))
+    : wagmiChainId;
+
+  // Connection status
+  const isConnected = ready && (authenticated || !!wagmiAddress);
+  const isConnecting = false;
 
   // custom hooks
   const {
     usdcFormatted,
     sTokenFormatted,
     refetchAll: refetchBalances,
-  } = useWithdrawalBalances();
+  } = useWithdrawalBalances(address as `0x${string}`);
 
   const {
     isLoading: isLoadingRequests,
@@ -54,7 +71,7 @@ export default function WithdrawalsPage() {
     totalClaimableAmount,
     totalPendingAmount,
     displayRequests,
-  } = useWithdrawRequests();
+  } = useWithdrawRequests(address as `0x${string}`);
 
   const {
     requestWithdraw,
@@ -65,7 +82,7 @@ export default function WithdrawalsPage() {
     claimWithdraw,
     claimingId,
     claimError,
-  } = useWithdrawActions();
+  } = useWithdrawActions(address as `0x${string}`, chainId, embeddedWallet);
 
   useEffect(() => {
     const timeout = copyTimeoutRef.current;
@@ -98,7 +115,7 @@ export default function WithdrawalsPage() {
 
   const handleConnect = async () => {
     try {
-      await open();
+      await login();
     } catch (error) {
       console.error("Connection error:", error);
     }

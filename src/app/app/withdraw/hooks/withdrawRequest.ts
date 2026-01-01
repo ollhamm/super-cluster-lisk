@@ -27,8 +27,9 @@ type DisplayRequest = WithdrawRequest & {
   progress: number;
 };
 
-export function useWithdrawRequests() {
-  const { address } = useAccount();
+export function useWithdrawRequests(accountAddress?: `0x${string}`) {
+  const { address: wagmiAddress } = useAccount();
+  const address = accountAddress || wagmiAddress;
   const publicClient = usePublicClient();
 
   const [requests, setRequests] = useState<WithdrawRequest[]>([]);

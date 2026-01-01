@@ -8,33 +8,39 @@ if (!projectId) {
   throw new Error("NEXT_PUBLIC_PROJECT_ID is not set");
 }
 
-// Base Sepolia - Only network we support
-export const baseSepolia = {
-  id: 84532,
-  name: "Base Sepolia",
-  nativeCurrency: { name: "Sepolia Ether", symbol: "ETH", decimals: 18 },
+// Dynamic chain configuration from environment variables
+const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "");
+const chainName = process.env.NEXT_PUBLIC_CHAIN_NAME || "";
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "";
+const blockExplorerName = process.env.NEXT_PUBLIC_BLOCK_EXPLORER_NAME || "";
+const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL || "";
+
+export const defaultChain = {
+  id: chainId,
+  name: chainName,
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   rpcUrls: {
-    default: { http: ["https://sepolia.base.org"] },
-    public: { http: ["https://sepolia.base.org"] },
+    default: { http: [rpcUrl] },
+    public: { http: [rpcUrl] },
   },
   blockExplorers: {
     default: {
-      name: "Base Sepolia Explorer",
-      url: "https://sepolia.basescan.org",
+      name: blockExplorerName,
+      url: blockExplorerUrl,
     },
   },
-  testnet: true,
+  testnet: chainId !== 1,
 } as const satisfies Chain;
 
 export const config = createConfig({
-  chains: [baseSepolia],
+  chains: [defaultChain],
   connectors: [
     injected(),
     walletConnect({ projectId }),
     coinbaseWallet({ appName: "SuperCluster" }),
   ],
   transports: {
-    [baseSepolia.id]: http(),
+    [defaultChain.id]: http(),
   },
 });
 
@@ -42,7 +48,7 @@ createWeb3Modal({
   wagmiConfig: config,
   projectId,
   enableAnalytics: true,
-  defaultChain: baseSepolia,
+  defaultChain: defaultChain,
   themeVariables: {
     "--w3m-accent": "#3b82f6",
   },

@@ -161,7 +161,7 @@ export function useSTokenBalance(accountAddress?: `0x${string}`) {
   };
 }
 
-export function useWsTokenBalance() {
+export function useWsTokenBalance(accountAddress?: `0x${string}`) {
   const formatTokenBalanceFloor = (raw: bigint, decimals: number) => {
     if (raw === BigInt(0)) return "0";
 
@@ -198,7 +198,8 @@ export function useWsTokenBalance() {
     return fraction ? `${whole}.${fraction}` : whole;
   };
 
-  const { address } = useAccount();
+  const { address: wagmiAddress } = useAccount();
+  const address = accountAddress || wagmiAddress;
 
   // Get decimals
   const { data: decimals } = useReadContract({
@@ -250,7 +251,7 @@ export function useWsTokenBalance() {
 }
 
 // New hook for withdrawal balances
-export function useWithdrawalBalances() {
+export function useWithdrawalBalances(accountAddress?: `0x${string}`) {
   const formatTokenBalanceFloor = (raw: bigint, decimals: number) => {
     if (raw === BigInt(0)) return "0";
 
@@ -287,7 +288,8 @@ export function useWithdrawalBalances() {
     return fraction ? `${whole}.${fraction}` : whole;
   };
 
-  const { address } = useAccount();
+  const { address: wagmiAddress } = useAccount();
+  const address = accountAddress || wagmiAddress;
 
   // USDC wallet balance
   const { data: usdcBalance, refetch: refetchUSDC } = useBalance({
@@ -304,7 +306,7 @@ export function useWithdrawalBalances() {
     formatted: sTokenFormatted,
     balance: sTokenBalance,
     refetch: refetchSToken,
-  } = useSTokenBalance();
+  } = useSTokenBalance(address);
 
   const usdcFormatted = useMemo(() => {
     if (!usdcBalance) return "0";

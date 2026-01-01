@@ -48,7 +48,8 @@ function buildImage(step: FrameStep) {
             "linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #0ea5e9 100%)",
           color: "#e2e8f0",
           fontFamily: "Inter, Arial, sans-serif",
-        }}>
+        }}
+      >
         <div
           style={{
             fontSize: 28,
@@ -56,7 +57,8 @@ function buildImage(step: FrameStep) {
             letterSpacing: 2,
             textTransform: "uppercase",
             color: "rgba(226, 232, 240, 0.8)",
-          }}>
+          }}
+        >
           SuperCluster
         </div>
         <div>
@@ -66,7 +68,8 @@ function buildImage(step: FrameStep) {
               fontWeight: 700,
               lineHeight: 1.1,
               marginBottom: 24,
-            }}>
+            }}
+          >
             {title}
           </div>
           <div
@@ -75,7 +78,8 @@ function buildImage(step: FrameStep) {
               lineHeight: 1.4,
               color: "rgba(226, 232, 240, 0.85)",
               maxWidth: 720,
-            }}>
+            }}
+          >
             {subtitle}
           </div>
         </div>
@@ -86,8 +90,9 @@ function buildImage(step: FrameStep) {
             alignItems: "center",
             fontSize: 28,
             color: "rgba(226, 232, 240, 0.75)",
-          }}>
-          <span>Base Sepolia • SuperCluster Protocol</span>
+          }}
+        >
+          <span>Mantle Testnet • SuperCluster Protocol</span>
           <span>Powered by Farcaster Frames</span>
         </div>
       </div>

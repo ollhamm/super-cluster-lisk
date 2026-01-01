@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useLogin, usePrivy, useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
 import { getSimplifiedError } from "@/services/web3/utils/getSimplifiedError";
 import { useSTokenBalance, useWsTokenBalance } from "@/hooks/useTokenBalance";
@@ -23,18 +23,40 @@ export default function SuperClusterWrapUnwrap() {
   const [amount, setAmount] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const { open } = useWeb3Modal();
-  const { address, isConnected, isConnecting } = useAccount();
+  const { login } = useLogin();
+  const { ready, authenticated } = usePrivy();
+  const { wallets } = useWallets();
+  const { address: wagmiAddress, chainId: wagmiChainId } = useAccount();
 
-  const { formatted: sUSDCBalance, refetch: refetchSToken } =
-    useSTokenBalance();
+  // Get embedded wallet from Privy
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType === "privy"
+  );
+
+  // Get address and chainId from Privy embedded wallet or fallback to Wagmi
+  const address = embeddedWallet?.address || wagmiAddress;
+  const chainId = embeddedWallet
+    ? parseInt(embeddedWallet.chainId.replace("eip155:", ""))
+    : wagmiChainId;
+
+  // Connection status
+  const isConnected = ready && (authenticated || !!wagmiAddress);
+  const isConnecting = false;
+
+  const { formatted: sUSDCBalance, refetch: refetchSToken } = useSTokenBalance(
+    address as `0x${string}`
+  );
   const {
     formatted: wsUSDCBalance,
     formattedConversionRate,
     refetch: refetchWsToken,
-  } = useWsTokenBalance();
+  } = useWsTokenBalance(address as `0x${string}`);
 
-  const { wrap, unwrap, isSubmitting, error, resetError } = useWrapping();
+  const { wrap, unwrap, isSubmitting, error, resetError } = useWrapping(
+    address as `0x${string}`,
+    chainId,
+    embeddedWallet
+  );
 
   const activeTab = pathname === "/app/wrap/unwrap" ? "unwrap" : "wrap";
 
@@ -64,7 +86,7 @@ export default function SuperClusterWrapUnwrap() {
   const handleConnect = async () => {
     try {
       resetError();
-      await open();
+      await login();
     } catch (error) {
       console.error("Wallet connection error:", error);
     }

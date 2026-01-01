@@ -25,7 +25,7 @@ function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     // Check for insufficient funds
     if (error.message.includes("insufficient funds")) {
-      return "Insufficient ETH for gas fees. Please get Base Sepolia ETH first from the faucet linked below.";
+      return `Insufficient ETH for gas fees. Please get ${process.env.NEXT_PUBLIC_NETWORK_NAME} ETH first from the faucet linked below.`;
     }
     return error.message;
   }
@@ -37,7 +37,7 @@ function getErrorMessage(error: unknown): string {
   ) {
     const msg = (error as { shortMessage: string }).shortMessage;
     if (msg.includes("insufficient funds")) {
-      return "Insufficient ETH for gas fees. Please get Base Sepolia ETH first from the faucet linked below.";
+      return `Insufficient ETH for gas fees. Please get ${process.env.NEXT_PUBLIC_NETWORK_NAME} ETH first from the faucet linked below.`;
     }
     return msg;
   }
@@ -49,7 +49,7 @@ function getErrorMessage(error: unknown): string {
   ) {
     const msg = (error as { message: string }).message;
     if (msg.includes("insufficient funds")) {
-      return "Insufficient ETH for gas fees. Please get Base Sepolia ETH first from the faucet linked below.";
+      return `Insufficient ETH for gas fees. Please get ${process.env.NEXT_PUBLIC_NETWORK_NAME} ETH first from the faucet linked below.`;
     }
     return msg;
   }
@@ -230,7 +230,8 @@ export default function FaucetPage() {
             Request Mock USDC for Testing
           </h1>
           <p className="text-md text-slate-400 max-w-2xl mx-auto mb-8">
-            Use this faucet to mint a small amount of Mock USDC on Base Sepolia.
+            Use this faucet to mint a small amount of Mock USDC on Testnet
+            Mantle.
           </p>
         </header>
 
@@ -243,12 +244,13 @@ export default function FaucetPage() {
                     Faucet Status
                   </h2>
                   <p className="text-sm text-slate-400">
-                    Connected wallet will receive Mock USDC on Base Sepolia.
+                    Connected wallet will receive Mock USDC on{" "}
+                    {process.env.NEXT_PUBLIC_NETWORK_NAME}.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="rounded bg-white/5 border border-white/10 px-4 py-3 text-sm text-slate-300">
-                    Network: {NETWORK_INFO.name}
+                    Network: {process.env.NEXT_PUBLIC_NETWORK_NAME}
                   </div>
                 </div>
               </div>
@@ -331,8 +333,8 @@ export default function FaucetPage() {
                     <div>
                       <p className="text-slate-200">Connect your wallet</p>
                       <p className="text-slate-400">
-                        Use Base Sepolia network. Switching is required before
-                        requesting tokens.
+                        Use {process.env.NEXT_PUBLIC_NETWORK_NAME} network.
+                        Switching is required before requesting tokens.
                       </p>
                     </div>
                   </div>

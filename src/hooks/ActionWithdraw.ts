@@ -10,7 +10,7 @@ import { parseUnits, decodeEventLog, type Address } from "viem";
 import {
   CONTRACTS,
   TOKEN_DECIMALS,
-  isBaseSepolia,
+  isCorrectChain,
 } from "@/services/web3/contracts/addresses";
 import { SUPERCLUSTER_ABI } from "@/services/web3/contracts/abis/SuperCluster";
 import { WITHDRAW_MANAGER_ABI } from "@/services/web3/contracts/abis/WithdrawManager";
@@ -73,8 +73,10 @@ export function useWithdrawActions() {
   const requestWithdraw = useCallback(
     async (amount: string) => {
       if (!isConnected) throw new Error("Wallet is not connected.");
-      if (!isBaseSepolia(chainId)) {
-        throw new Error("Please switch to Base Sepolia network first.");
+      if (!isCorrectChain(chainId)) {
+        throw new Error(
+          `Please switch to ${process.env.NEXT_PUBLIC_NETWORK_NAME} network first.`
+        );
       }
 
       const cleanAmount = amount.trim();
@@ -158,8 +160,10 @@ export function useWithdrawActions() {
   const claimWithdraw = useCallback(
     async (requestId: bigint) => {
       if (!isConnected) throw new Error("Wallet is not connected.");
-      if (!isBaseSepolia(chainId)) {
-        throw new Error("Please switch to Base Sepolia network first.");
+      if (!isCorrectChain(chainId)) {
+        throw new Error(
+          `Please switch to ${process.env.NEXT_PUBLIC_NETWORK_NAME} network first.`
+        );
       }
 
       setClaimError(null);

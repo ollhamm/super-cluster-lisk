@@ -279,7 +279,9 @@ export default function StakePage() {
     const connectWallet = async () => {
       if (authenticated && embeddedWallet) {
         try {
-          await embeddedWallet.switchChain(84532); // Base Sepolia
+          await embeddedWallet.switchChain(
+            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "")
+          );
         } catch (err) {
           console.error("Failed to switch chain:", err);
         }

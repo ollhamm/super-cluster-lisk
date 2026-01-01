@@ -21,7 +21,7 @@ if (missingAddresses.length > 0) {
   );
 }
 
-// Base Sepolia Testnet - Primary network
+// Testnet - Primary network
 export const CONTRACTS = {
   superCluster: process.env.NEXT_PUBLIC_SUPERCLUSTER_ADDRESS as Address,
   pilot: process.env.NEXT_PUBLIC_PILOT_ADDRESS as Address,
