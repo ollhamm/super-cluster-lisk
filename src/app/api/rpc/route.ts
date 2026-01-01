@@ -6,17 +6,36 @@ const RPC_URL = "https://rpc.testnet.mantle.xyz";
 
 export async function POST(request: NextRequest) {
   try {
-    // Get raw body to preserve exact format
-    const body = await request.text();
+    // Parse JSON body
+    const bodyText = await request.text();
+    console.log("📨 Received:", bodyText);
 
-    console.log("📨 RPC Request:", body.substring(0, 200));
+    let requestBody;
+    try {
+      requestBody = JSON.parse(bodyText);
+    } catch (e) {
+      return NextResponse.json(
+        { error: "Invalid JSON", message: "Request body must be valid JSON" },
+        { status: 400 }
+      );
+    }
+
+    // Ensure proper JSON-RPC format
+    if (!requestBody.jsonrpc) {
+      requestBody.jsonrpc = "2.0";
+    }
+    if (!requestBody.id) {
+      requestBody.id = 1;
+    }
+
+    console.log("📤 Sending to RPC:", JSON.stringify(requestBody));
 
     const response = await fetch(RPC_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: body,
+      body: JSON.stringify(requestBody),
     });
 
     const responseText = await response.text();
