@@ -337,7 +337,7 @@ export default function StakePage() {
           <div className="bg-slate-900/95 border border-slate-700/50 rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200">
             <div className="flex flex-col items-center text-center">
               {/* Icon */}
-              <div className="w-16 h-16 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-orange-500/10 border border-orange-500/20 rounded flex items-center justify-center mb-4">
                 <AlertTriangle className="w-8 h-8 text-orange-400" />
               </div>
 
@@ -355,14 +355,14 @@ export default function StakePage() {
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <Link href="/app/faucet" className="flex-1">
-                  <Button className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-600  text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl">
+                  <Button className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-600  text-white font-semibold rounded shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl">
                     Go to Faucet
                   </Button>
                 </Link>
                 <Button
                   onClick={() => setShowNoUSDCPopup(false)}
                   variant="outline"
-                  className="flex-1 sm:flex-none h-12 px-6 border-slate-600 text-slate-300  rounded-xl transition-colors"
+                  className="flex-1 sm:flex-none h-12 px-6 border-slate-600 text-slate-300  rounded transition-colors"
                 >
                   Close
                 </Button>
