@@ -110,8 +110,8 @@ export default function FaucetPage() {
   console.log("🔗 Chain detection:", {
     rawChainId,
     parsedChainId: chainId,
-    expectedChainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || ""),
-    isCorrect: chainId === parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || ""),
+    expectedChainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003"),
+    isCorrect: chainId === parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003"),
   });
 
   // Check if user is authenticated via Privy (has embedded wallet) or connected via Wagmi
@@ -123,7 +123,7 @@ export default function FaucetPage() {
       if (authenticated && embeddedWallet && !address) {
         try {
           await embeddedWallet.switchChain(
-            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "")
+            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003")
           );
         } catch (err) {
           console.error("Failed to switch chain:", err);
