@@ -34,6 +34,7 @@ export function ScrollContent({
   onScrollProgress,
 }: ScrollContentProps) {
   const [heroProgress, setHeroProgress] = useState<number>(0);
+  const [scrollY, setScrollY] = useState<number>(0);
 
   const parseHeightToPx = (h: string) => {
     if (h.endsWith("vh")) {
@@ -50,6 +51,8 @@ export function ScrollContent({
   useEffect(() => {
     const handle = () => {
       const scrollY = window.scrollY;
+      setScrollY(scrollY);
+
       const heroPx = parseHeightToPx(height);
       const maxHeroScroll = Math.max(heroPx - window.innerHeight, 1);
       const p = Math.min(scrollY / maxHeroScroll, 1);
@@ -70,6 +73,11 @@ export function ScrollContent({
       onScrollProgress(heroProgress);
     }
   }, [heroProgress, onScrollProgress]);
+
+  // Multiplier untuk sensitivitas text movement
+  const textScrollMultiplier = 2.5;
+  const textTranslateY = -scrollY * textScrollMultiplier;
+  const textOpacity = Math.max(1 - scrollY / 150, 0);
 
   return (
     <div
@@ -98,6 +106,8 @@ export function ScrollContent({
             position: "relative",
             zIndex: 2,
             pointerEvents: "auto",
+            transform: `translateY(${textTranslateY}px)`,
+            opacity: textOpacity,
           }}
         >
           {children}
