@@ -255,10 +255,10 @@ export default function FaucetPage() {
 
         <section className="grid lg:grid-cols-[1fr] gap-6 lg:gap-8 items-start">
           <div className="space-y-6">
-            <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm">
+            <div className="bg-white/10 border border-white/10 rounded p-4 md:p-8 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl font-semibold text-slate-300">
+                  <h2 className="text-lg md:text-xl font-semibold text-slate-300">
                     Faucet Status
                   </h2>
                   <p className="text-sm text-slate-400">
@@ -287,7 +287,7 @@ export default function FaucetPage() {
                   <div className="flex items-center gap-2 text-sm text-slate-400 tracking-wide">
                     Wallet USDC Balance
                   </div>
-                  <div className="mt-2 text-2xl font-semibold text-slate-200">
+                  <div className="mt-2 text-sm md:text-xl font-semibold text-slate-200">
                     {usdcBalance} USDC
                   </div>
                 </div>

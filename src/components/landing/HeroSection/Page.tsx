@@ -7,7 +7,7 @@ export default function HeroSection() {
     <>
       <section id="hero">
         <Geometri>
-          <div className="relative h-[72vh] lg:h-[76vh] xl:h-[80vh] max-w-7xl mx-auto">
+          <div className="relative h-[80vh] max-w-7xl mx-auto">
             {/* Total Value Locked - Kanan Atas */}
             <div className="absolute top-3 md:top-6 right-4 md:right-12 text-right">
               <p className="text-sm md:text-lg text-slate-400 mb-1">APY*</p>

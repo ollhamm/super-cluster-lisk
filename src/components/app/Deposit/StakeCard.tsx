@@ -63,7 +63,7 @@ export function StakeCard({
   const formattedPilotAddress = selectedPilotInfo?.address;
   return (
     <div className="lg:col-span-2 space-y-6">
-      <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm">
+      <div className="bg-white/10 border border-white/10 rounded p-4 md:p-8 backdrop-blur-sm">
         <div className="mb-6">
           <label className="text-sm text-slate-400 mb-2 block">
             Amount to Deposit
@@ -78,7 +78,7 @@ export function StakeCard({
                   value={usdcAmount}
                   onChange={onAmountChange}
                   disabled={!isConnected}
-                  className="bg-transparent border-none text-3xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 disabled:opacity-50"
+                  className="bg-transparent border-none text-sm md:text-xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 disabled:opacity-50"
                 />
               </div>
               <button
@@ -101,7 +101,7 @@ export function StakeCard({
                     Available to Deposit
                   </span>
                 </div>
-                <div className="text-2xl text-slate-300">
+                <div className="text-lg md:text-2xl text-slate-300">
                   {usdcBalance} USDC
                 </div>
               </div>
@@ -111,7 +111,7 @@ export function StakeCard({
                     Deposited amount
                   </span>
                 </div>
-                <div className="text-2xl text-slate-300">
+                <div className="text-lg md:text-2xl text-slate-300">
                   {sUSDCBalance} sUSDC
                 </div>
               </div>
@@ -139,7 +139,9 @@ export function StakeCard({
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-slate-400">sUSDC APR</span>
                 </div>
-                <div className="text-2xl text-[#0b84ba]">{stats.apr}</div>
+                <div className="text-lg md:text-2xl text-[#0b84ba]">
+                  {stats.apr}
+                </div>
               </div>
               <div className="space-y-1 sm:col-span-2">
                 <div className="flex items-center gap-2">
@@ -147,7 +149,7 @@ export function StakeCard({
                 </div>
                 <div className="flex flex-col gap-3 rounded border border-white/20 bg-black p-4">
                   <div className="flex flex-col gap-1">
-                    <span className="text-lg font-semibold text-slate-200">
+                    <span className="text-sm md:text-lg font-medium text-slate-200">
                       {selectedPilotInfo?.name}
                     </span>
                     <Link
@@ -188,7 +190,7 @@ export function StakeCard({
                 height={48}
                 className="flex-shrink-0 rounded-full"
               />
-              <div className="text-xl text-white truncate">
+              <div className="text-sm md:text-xl text-white truncate">
                 {usdcAmount || "0.0000"} sUSDC
               </div>
             </div>

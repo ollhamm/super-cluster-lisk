@@ -38,7 +38,7 @@ export default function WithdrawCard({
   children,
 }: WithdrawCardProps) {
   return (
-    <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm mb-6">
+    <div className="bg-white/10 border border-white/10 rounded p-4 md:p-8 backdrop-blur-sm mb-6">
       {/* amount */}
       <div className="mb-6">
         <label className="text-sm text-slate-400 mb-2 block">
@@ -60,7 +60,7 @@ export default function WithdrawCard({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={!isConnected || isSubmitting}
-                className="bg-transparent border-none text-3xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 min-w-0 disabled:opacity-60"
+                className="bg-transparent border-none text-sm md:text-xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 min-w-0 disabled:opacity-60"
               />
             </div>
             <button
@@ -147,7 +147,7 @@ export default function WithdrawCard({
               <div className="flex items-center gap-2">
                 <span className="text-sm text-slate-400">sUSDC balance</span>
               </div>
-              <div className="text-2xl text-slate-200">
+              <div className="text-sm md:text-xl text-slate-200">
                 {sTokenFormatted} sUSDC
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function WithdrawCard({
               <div className="flex items-center gap-2">
                 <span className="text-sm text-slate-400">Total claimable</span>
               </div>
-              <div className="text-2xl text-slate-200">
+              <div className="text-sm md:text-xl text-slate-200">
                 {totalClaimableAmount} USDC
               </div>
             </div>

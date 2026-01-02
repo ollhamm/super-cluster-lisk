@@ -58,10 +58,12 @@ export default function RequestsList({
   claimedCount,
 }: RequestsListProps) {
   return (
-    <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm mb-6">
+    <div className="bg-white/10 border border-white/10 rounded p-4 md:p-8 backdrop-blur-sm mb-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl text-slate-300">Your withdrawal request</h2>
+          <h2 className="text-lg md:text-2xl text-slate-300">
+            Your withdrawal request
+          </h2>
           <p className="text-sm text-slate-400">
             Claim USDC when the request has been finalized by the operator.
           </p>
@@ -74,7 +76,7 @@ export default function RequestsList({
             variant="ghost"
             size="icon"
             onClick={fetchRequests}
-            className="border border-white/10 cursor-pointer hover:text-slate-300 hover:bg-white/5"
+            className="border border-white/10 cursor-pointer rounded hover:text-slate-300 hover:bg-white/5"
           >
             <RefreshCw className="w-4 h-4" />
           </Button>
@@ -99,13 +101,13 @@ export default function RequestsList({
                 <span className="text-slate-400 block">
                   Total ready to claim
                 </span>
-                <span className="text-slate-200 text-lg">
+                <span className="text-slate-200 text-sm md:text-lg">
                   {totalClaimableAmount} USDC
                 </span>
               </div>
               <div>
                 <span className="text-slate-400 block">Total waiting</span>
-                <span className="text-slate-200 text-lg">
+                <span className="text-slate-200 text-sm md:text-lg">
                   {parseFloat(totalPendingAmount || "0").toFixed(4)} sUSDC
                 </span>
               </div>
@@ -113,13 +115,13 @@ export default function RequestsList({
                 <span className="text-slate-400 block">
                   Ready-to-claim requests
                 </span>
-                <span className="text-slate-200 text-lg">
+                <span className="text-slate-200 text-sm md:text-lg">
                   {readyToClaimCount.toString().padStart(2, "0")}
                 </span>
               </div>
               <div>
                 <span className="text-slate-400 block">Completed requests</span>
-                <span className="text-slate-200 text-lg">
+                <span className="text-slate-200 text-sm md:text-lg">
                   {claimedCount.toString().padStart(2, "0")}
                 </span>
               </div>
@@ -158,7 +160,7 @@ export default function RequestsList({
                     <FileText className="w-4 h-4" />
                     Request #{request.id.toString()}
                   </div>
-                  <div className="mt-2 text-xl font-semibold text-slate-200">
+                  <div className="mt-2 text-lg md:text-xl font-semibold text-slate-200">
                     {parseFloat(request.sAmountFormatted || "0").toFixed(4)}{" "}
                     sUSDC
                     <span className="text-sm font-normal text-slate-400 ml-2">

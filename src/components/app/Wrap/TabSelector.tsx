@@ -12,7 +12,7 @@ export default function TabSelector({
       <div className="flex gap-2 p-1.5 bg-white/10 border border-white/10 rounded backdrop-blur-sm">
         <button
           onClick={() => onTabChange("wrap")}
-          className={`flex-1 relative py-3 px-6 rounded font-semibold transition-all duration-300 ${
+          className={`flex-1 relative py-3 px-6 rounded font-medium text-sm transition-all duration-300 ${
             activeTab === "wrap"
               ? "text-white"
               : "text-slate-400 hover:text-white"
@@ -25,7 +25,7 @@ export default function TabSelector({
         </button>
         <button
           onClick={() => onTabChange("unwrap")}
-          className={`flex-1 relative py-3 px-6 rounded font-medium transition-all duration-300 ${
+          className={`flex-1 relative py-3 px-6 rounded font-medium text-sm transition-all duration-300 ${
             activeTab === "unwrap"
               ? "text-white"
               : "text-slate-400 hover:text-white"

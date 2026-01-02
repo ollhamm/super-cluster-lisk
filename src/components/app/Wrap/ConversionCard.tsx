@@ -39,7 +39,7 @@ export default function ConversionCard({
   children,
 }: ConversionCardProps) {
   return (
-    <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm">
+    <div className="bg-white/10 border border-white/10 rounded p-4 md:p-8 backdrop-blur-sm">
       {/* From Section */}
       <div className="mb-6">
         <label className="text-sm text-slate-400 mb-2 block">You send</label>
@@ -62,7 +62,7 @@ export default function ConversionCard({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={!isConnected}
-                className="bg-transparent border-none text-3xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 disabled:opacity-50"
+                className="bg-transparent border-none text-sm md:text-xl font-semibold focus-visible:ring-0 p-1 h-auto text-white placeholder:text-slate-600 disabled:opacity-50"
               />
             </div>
             <button
@@ -97,11 +97,11 @@ export default function ConversionCard({
                 className="rounded-full"
               />
             </div>
-            <div className="text-xl font-semibold text-white">
+            <div className="text-sm md:text-xl font-semibold text-white">
               {activeTab === "wrap"
                 ? wrapDetails.youWillReceive
                 : unwrapDetails.youWillReceive}{" "}
-              <span className="text-slate-400 text-lg">
+              <span className="text-slate-400 text-sm md:text-lg">
                 {activeTab === "wrap" ? "wsUSDC" : "sUSDC"}
               </span>
             </div>

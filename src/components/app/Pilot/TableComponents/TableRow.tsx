@@ -64,7 +64,7 @@ export function AssetRowDesktop({
         disabled
           ? "bg-slate-950/20 opacity-40 cursor-not-allowed"
           : isSelected
-          ? "bg-white/5 border-slate-700"
+          ? "bg-black/5 border-slate-700"
           : "bg-white/5 hover:bg-white/10"
       }`}
       onClick={() => !disabled && onSelect()}
@@ -154,8 +154,8 @@ export function AssetCardMobile({
         disabled
           ? "bg-slate-950/20 opacity-60"
           : isSelected
-          ? "bg-white/10 border-blue-400/40"
-          : "bg-white/5"
+          ? "bg-white/5 border-white/5"
+          : "bg-white/5 border-white/5"
       }`}
       onClick={() => !disabled && onSelect()}
     >
@@ -211,10 +211,9 @@ export function AssetCardMobile({
             e.stopPropagation();
             if (!disabled) onExpand();
           }}
-          className="w-full py-2 bg-slate-900/40 rounded hover:bg-slate-900/60 flex px-4 gap-2 text-sm"
+          className="w-full py-2 text-[#0b84ba] flex  text-sm"
         >
           {isExpanded ? "Hide Markets" : "Show Markets"}
-          {isExpanded ? <ChevronUp /> : <ChevronDown />}
         </button>
       )}
     </div>
@@ -232,7 +231,7 @@ function Stat({ label, value, green }: StatProps) {
     <div className="bg-slate-900/40 p-2.5 rounded">
       <div className="text-slate-400 text-xs">{label}</div>
       <div
-        className={`text-sm font-semibold ${
+        className={`text-sm font-medium ${
           green ? "text-green-400" : "text-white"
         }`}
       >
