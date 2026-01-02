@@ -5,8 +5,7 @@ import { http } from "wagmi";
  * Uses /api/rpc in production to avoid CORS issues
  */
 export function getRpcUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.testnet.mantle.xyz";
+  const baseUrl = process.env.NEXT_PUBLIC_RPC_URL || "";
 
   // Server-side: always use direct RPC
   if (typeof window === "undefined") {

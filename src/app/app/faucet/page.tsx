@@ -111,8 +111,8 @@ export default function FaucetPage() {
     embeddedWalletChainId: rawChainId,
     wagmiChainId,
     finalChainId: chainId,
-    expectedChainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003"),
-    isCorrect: chainId === parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003"),
+    expectedChainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || ""),
+    isCorrect: chainId === parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || ""),
   });
 
   // Check if user is authenticated via Privy (has embedded wallet) or connected via Wagmi
@@ -124,7 +124,7 @@ export default function FaucetPage() {
       if (authenticated && embeddedWallet && !address) {
         try {
           await embeddedWallet.switchChain(
-            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003")
+            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "")
           );
         } catch (err) {
           console.error("Failed to switch chain:", err);
@@ -248,8 +248,8 @@ export default function FaucetPage() {
             Request Mock USDC for Testing
           </h1>
           <p className="text-md text-slate-400 max-w-2xl mx-auto mb-8">
-            Use this faucet to mint a small amount of Mock USDC on Testnet
-            Mantle.
+            Use this faucet to mint a small amount of Mock USDC on Mantle
+            Testnet.
           </p>
         </header>
 
