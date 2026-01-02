@@ -55,6 +55,12 @@ export function StakeCard({
   getStakeButtonText,
   error,
 }: StakeCardProps) {
+  function formatAddress(address?: string | null) {
+    if (!address) return "—";
+    return `${address.slice(0, 12)}...${address.slice(-12)}`;
+  }
+  const formattedTokenAddress = address;
+  const formattedPilotAddress = selectedPilotInfo?.address;
   return (
     <div className="lg:col-span-2 space-y-6">
       <div className="bg-white/10 border border-white/10 rounded p-8 backdrop-blur-sm">
@@ -113,17 +119,21 @@ export function StakeCard({
                 <span className="text-sm text-slate-400 block">
                   Wallet Address
                 </span>
-                <button
-                  onClick={onCopyAddress}
-                  className="flex items-center gap-2 text-sm font-mono text-slate-300 hover:text-slate-400 transition-colors group"
-                >
-                  <span>{address}</span>
-                  {copied ? (
-                    <Check className="w-3.5 h-3.5 text-slate-300" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
-                </button>
+                {formattedTokenAddress ? (
+                  <button
+                    onClick={onCopyAddress}
+                    className="flex items-center gap-2 text-sm font-mono text-slate-300 hover:text-slate-400 transition-colors group"
+                  >
+                    {formatAddress(formattedTokenAddress)}
+                    {copied ? (
+                      <Check className="w-3.5 h-3.5 text-slate-300" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                ) : (
+                  "Loading..."
+                )}
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -146,11 +156,12 @@ export function StakeCard({
                     >
                       Manage pilots
                     </Link>
+
                     <button
                       onClick={onCopyPilot}
                       className="custom-pointer flex items-center gap-2 font-mono text-sm text-slate-300 transition-all hover:text-slate-400 duration-300 self-start"
                     >
-                      <span>{selectedPilotInfo?.address}</span>
+                      <span>{formatAddress(formattedPilotAddress)}</span>
                       {pilotCopied ? (
                         <Check className="h-3.5 w-3.5 text-slate-300" />
                       ) : (

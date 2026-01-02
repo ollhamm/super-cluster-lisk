@@ -41,12 +41,26 @@ export default function LandingNavbar() {
   }, [lastScrollY]);
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    {
-      name: "Documentation",
-      href: "https://super-cluster-2.gitbook.io/super-cluster-docs",
-    },
+    { name: "Features", href: "#features" },
+    { name: "How It Works", href: "#how-it-works" },
   ];
+
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (targetId === "hero") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      setMenuOpen(false);
+    }
+  };
 
   return (
     <>
@@ -69,6 +83,7 @@ export default function LandingNavbar() {
                   key={link.name}
                   href={link.href}
                   className="relative px-1 py-2 text-lg transition-colors text-slate-400 hover:text-white"
+                  onClick={(e) => handleSmoothScroll(e, link.href)}
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel={
                     link.href.startsWith("http")
@@ -82,7 +97,6 @@ export default function LandingNavbar() {
               <Link
                 href="/app/pilot"
                 className="block px-4 py-3 primary-button rounded transition-all text-center font-medium"
-                onClick={() => setMenuOpen(false)}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -122,7 +136,7 @@ export default function LandingNavbar() {
                   key={link.name}
                   href={link.href}
                   className="block px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => handleSmoothScroll(e, link.href)}
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel={
                     link.href.startsWith("http")

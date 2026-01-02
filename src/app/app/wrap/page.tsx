@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { getSimplifiedError } from "@/services/web3/utils/getSimplifiedError";
 import { useSTokenBalance, useWsTokenBalance } from "@/hooks/useTokenBalance";
 import { useWrapping } from "@/hooks/useWrapping";
+import Link from "next/link";
 
 import toast from "react-hot-toast";
 
@@ -14,14 +15,19 @@ import WrapHeader from "@/components/app/Wrap/Header";
 import TabSelector from "@/components/app/Wrap/TabSelector";
 import ConversionCard from "@/components/app/Wrap/ConversionCard";
 import WalletInfo from "@/components/app/Wrap/WalletInfo";
-import ActionButton from "@/components/app/Wrap/ActionButton";
 import { FaqSidebar } from "@/components/app/Wrap/FaqSidebar";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ActionButton from "@/components/app/Wrap/ActionButton";
 
 export default function SuperClusterWrapUnwrap() {
   const router = useRouter();
   const pathname = usePathname();
   const [amount, setAmount] = useState("");
   const [copied, setCopied] = useState(false);
+  const [showNoSUSDCPopup, setShowNoSUSDCPopup] = useState(false);
+  const [showNoWSUSDCPopup, setShowNoWSUSDCPopup] = useState(false);
+  const [, setShowInsufficientPopup] = useState(false);
 
   const { login } = useLogin();
   const { ready, authenticated } = usePrivy();
@@ -198,6 +204,42 @@ export default function SuperClusterWrapUnwrap() {
     exchangeRate: `1 wsUSDC = ${formattedConversionRate || "0.0000"} sUSDC`,
   };
 
+  // Check if amount sUSDC balance and show popup
+  if (isConnected && activeTab === "wrap") {
+    const cleanBalance = sUSDCBalance.replace(/,/g, "");
+    const inputAmount = parseFloat(amount);
+    const availableBalance = parseFloat(cleanBalance);
+
+    // Show insufficient balance popup when user types amount > balance
+    if (inputAmount > availableBalance && availableBalance > 0) {
+      setShowInsufficientPopup(true);
+    }
+
+    // Show no USDC popup when user tries to type but has 0 balance
+    if (availableBalance === 0 && inputAmount > 0) {
+      setShowNoSUSDCPopup(true);
+      setAmount(""); // Clear input
+    }
+  }
+
+  // Check if amount wsUSDC balance and show popup for unwrap
+  if (isConnected && activeTab === "unwrap") {
+    const cleanBalance = wsUSDCBalance.replace(/,/g, "");
+    const inputAmount = parseFloat(amount);
+    const availableBalance = parseFloat(cleanBalance);
+
+    // Show insufficient balance popup when user types amount > balance
+    if (inputAmount > availableBalance && availableBalance > 0) {
+      setShowInsufficientPopup(true);
+    }
+
+    // Show no wsUSDC popup when user tries to type but has 0 balance
+    if (availableBalance === 0 && inputAmount > 0) {
+      setShowNoWSUSDCPopup(true);
+      setAmount(""); // Clear input
+    }
+  }
+
   const faqItems = [
     {
       question:
@@ -224,6 +266,87 @@ export default function SuperClusterWrapUnwrap() {
 
   return (
     <div className="min-h-screen py-20 text-white">
+      {/* No wsUSDC Popup */}
+      {showNoWSUSDCPopup && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
+          <div className="bg-white/10 border border-slate-700/50 rounded p-8 max-w-md w-full animate-in fade-in zoom-in duration-200">
+            <div className="flex flex-col items-center text-center">
+              {/* Icon */}
+              <div className="w-16 h-16 border border-orange-500/20 rounded flex items-center justify-center mb-4">
+                <AlertTriangle className="w-8 h-8 text-orange-400" />
+              </div>
+
+              {/* Title */}
+              <h3 className="font-bold text-gray-200 text-2xl mb-3">
+                No wsUSDC Available
+              </h3>
+
+              {/* Description */}
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                You need wsUSDC tokens to unwrap. Go to Wrap tab to wrap your
+                sUSDC tokens first.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <Link href="/app/wrap" className="flex-1">
+                  <Button className="w-full px-4 py-3 h-14 primary-button text-white font-medium text-md rounded transition-all duration-300 disabled:opacity-50">
+                    Go to Wrap
+                  </Button>
+                </Link>
+                <Button
+                  onClick={() => setShowNoWSUSDCPopup(false)}
+                  variant="outline"
+                  className="flex-1 sm:flex-none px-4 py-3 h-14 font-medium border-white/10 bg-white/20 hover:bg-white/10 text-slate-300 hover:text-slate-200 rounded transition-colors"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* No sUSDC Popup */}
+      {showNoSUSDCPopup && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
+          <div className="bg-white/10 border border-slate-700/50 rounded p-8 max-w-md w-full animate-in fade-in zoom-in duration-200">
+            <div className="flex flex-col items-center text-center">
+              {/* Icon */}
+              <div className="w-16 h-16 border border-orange-500/20 rounded flex items-center justify-center mb-4">
+                <AlertTriangle className="w-8 h-8 text-orange-400" />
+              </div>
+
+              {/* Title */}
+              <h3 className="font-bold text-gray-200 text-2xl mb-3">
+                No sUSDC Available
+              </h3>
+
+              {/* Description */}
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                You need sUSDC tokens to stake. Get test sUSDC from Deposit to
+                start Wrapping.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <Link href="/app/deposit" className="flex-1">
+                  <Button className="w-full px-4 py-3 h-14 primary-button text-white font-medium text-md rounded transition-all duration-300 disabled:opacity-50">
+                    Go to Deposit
+                  </Button>
+                </Link>
+                <Button
+                  onClick={() => setShowNoSUSDCPopup(false)}
+                  variant="outline"
+                  className="flex-1 sm:flex-none px-4 py-3 h-14 font-medium border-white/10 bg-white/20 hover:bg-white/10 text-slate-300 hover:text-slate-200 rounded transition-colors"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <WrapHeader />

@@ -144,3 +144,19 @@ input[type="number"] {
   background-color: #0973a3;
   transition: all ease-in-out 0.2s;
 }
+
+/* Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Global scrollbar hide */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

@@ -47,6 +47,7 @@ export default function DefinitionSection() {
 
   return (
     <section
+      id="about"
       className="w-full py-32"
       style={{
         background:
