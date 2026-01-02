@@ -6,7 +6,6 @@ import { cookieToInitialState } from "wagmi";
 import { config } from "@/services/web3/wagmi/config";
 import Footer from "@/components/Footer";
 import PrivyClientProvider from "@/services/auth/PrivyClientProvider";
-import "toastify-js/src/toastify.css";
 
 export const metadata: Metadata = {
   title: "SuperCluster App - DeFi Dashboard",

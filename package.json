@@ -26,6 +26,7 @@
     "@vercel/analytics": "^1.5.0",
     "@walletconnect/ethereum-provider": "~2.21.1",
     "@web3modal/wagmi": "^5.1.11",
+    "@xyflow/react": "^12.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "devicon-react-svg": "^0.2.4",
@@ -39,7 +40,6 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "tailwind-merge": "^3.3.1",
-    "toastify-js": "^1.12.0",
     "wagmi": "^2.17.5"
   },
   "devDependencies": {
