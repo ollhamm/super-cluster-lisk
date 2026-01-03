@@ -12,6 +12,7 @@ import {
   Connection,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { animate } from "framer-motion";
 
 // Custom Node Component
 
@@ -89,7 +90,7 @@ const initialNodes = [
     data: { label: "USDC" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -104,7 +105,7 @@ const initialNodes = [
     data: { label: "IDRX" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -136,7 +137,7 @@ const initialNodes = [
     data: { label: "Aave" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -151,7 +152,7 @@ const initialNodes = [
     data: { label: "Morpho" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -183,7 +184,7 @@ const initialNodes = [
     data: { label: "Wrap Tokens" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -198,7 +199,7 @@ const initialNodes = [
     data: { label: "Pilot Strategy" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -230,7 +231,7 @@ const initialNodes = [
     data: { label: "Request" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -245,7 +246,7 @@ const initialNodes = [
     data: { label: "Instant Claim" },
     ...nodeDefaults,
     style: {
-      background: "#0f172a",
+      background: "#1e293b",
       border: "1px solid #0b84ba",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -286,61 +287,68 @@ const initialEdges = [
     animated: true,
     style: { stroke: "#0b84ba", strokeWidth: 2 },
   },
+
   // Deposit sub-branches
   {
     id: "e-deposit-usdc",
     source: "deposit",
     target: "usdc",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   {
     id: "e-deposit-idrx",
     source: "deposit",
     target: "idrx",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   // Earn sub-branches
   {
     id: "e-earn-aave",
     source: "earn",
     target: "aave",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   {
     id: "e-earn-morpho",
     source: "earn",
     target: "morpho",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   // DeFi sub-branches
   {
     id: "e-defi-wrap",
     source: "defi",
     target: "wrap",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   {
     id: "e-defi-pilot",
     source: "defi",
     target: "pilot",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   // Withdraw sub-branches
   {
     id: "e-withdraw-request",
     source: "withdraw",
     target: "request",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
   {
     id: "e-withdraw-claim",
     source: "withdraw",
     target: "claim",
-    style: { stroke: "#0b84ba", strokeOpacity: 0.5 },
+    animated: true,
+    style: { stroke: "#0b84ba", strokeOpacity: 2 },
   },
 ];
-
-// ...existing code...
 
 export default function MindMapSection() {
   const [nodes, _, onNodesChange] = useNodesState(initialNodes);
@@ -356,7 +364,10 @@ export default function MindMapSection() {
   };
 
   return (
-    <section className="relative w-full py-16 sm:py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-slate-950">
+    <section
+      id="how-it-works"
+      className="relative w-full py-16 sm:py-20 md:py-32 px-2 md:px-8"
+    >
       <div className="max-w-7xl px-6 mx-auto">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">

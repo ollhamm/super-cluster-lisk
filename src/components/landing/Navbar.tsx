@@ -4,12 +4,14 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useNetworkInfo } from "@/contexts/NetworkInfoContext";
 
 export default function LandingNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { isOpen } = useNetworkInfo();
 
   useEffect(() => {
     let ticking = false;
@@ -41,7 +43,9 @@ export default function LandingNavbar() {
   }, [lastScrollY]);
 
   const navLinks = [
+    { name: "About", href: "#about" },
     { name: "Features", href: "#features" },
+    { name: "Core Principles", href: "#core-principles" },
     { name: "How It Works", href: "#how-it-works" },
   ];
 
@@ -52,13 +56,22 @@ export default function LandingNavbar() {
     if (href.startsWith("#")) {
       e.preventDefault();
       const targetId = href.substring(1);
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (targetId === "hero") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+
+      // Tutup menu dengan callback setelah animasi selesai
       setMenuOpen(false);
+
+      // Gunakan requestAnimationFrame untuk memastikan render selesai
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const element = document.getElementById(targetId);
+
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            window.location.hash = href;
+          }
+        });
+      });
     }
   };
 
@@ -67,7 +80,7 @@ export default function LandingNavbar() {
       <nav
         className={`sticky top-0 left-0 w-full z-50 transition-all duration-600 ${
           scrolled ? "backdrop-blur-xl " : "bg-transparent"
-        } ${visible ? "translate-y-0" : "-translate-y-full"}`}
+        } ${visible && !isOpen ? "translate-y-0" : "-translate-y-full"}`}
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-20">

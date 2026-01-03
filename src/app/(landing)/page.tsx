@@ -5,10 +5,12 @@ import FeatureSection from "@/components/landing/FeatureSection/page";
 import HeroSection from "@/components/landing/HeroSection/Page";
 import MindMapSection from "@/components/landing/MindMapSection/page";
 import NetworkInfoWidget from "@/components/landing/NetworkInfoWidget/page";
+import NetworkInfoOverlay from "@/components/landing/NetworkInfoOverlay";
 
 export default function LandingPage() {
   return (
     <>
+      <NetworkInfoOverlay />
       <HeroSection />
       <FeatureSection />
       <DefinitionSection />

@@ -205,7 +205,7 @@ const ScrollStack = ({
 ========================= */
 export default function CoreFlowStackSection() {
   return (
-    <section id="how-it-works" className="relative max-w-7xl mx-auto ">
+    <section className="relative max-w-7xl mx-auto ">
       <ScrollStack>
         {coreFlow.map((step, i) => (
           <ScrollStackItem key={step.id}>

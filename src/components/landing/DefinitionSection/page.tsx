@@ -46,14 +46,7 @@ export default function DefinitionSection() {
   }, []);
 
   return (
-    <section
-      id="about"
-      className="w-full py-32"
-      style={{
-        background:
-          "linear-gradient(to right, rgba(11,132,186,0.1), rgba(255,255,255,0.03))",
-      }}
-    >
+    <section id="core-principles" className="w-full py-32">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* LEFT SIDE */}
         <div className="lg:sticky lg:top-24 self-start">

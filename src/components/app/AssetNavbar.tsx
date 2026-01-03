@@ -38,6 +38,7 @@ export function Navbar({ links }: NavbarProps) {
   const { open } = useWeb3Modal();
   const { address, isConnected, isConnecting } = useAccount();
   const { disconnect } = useDisconnect();
+  const { user, authenticated, logout } = usePrivy();
 
   useEffect(() => {
     let ticking = false;
@@ -79,8 +80,6 @@ export function Navbar({ links }: NavbarProps) {
       console.error("Wallet connection error:", error);
     }
   };
-
-  const { user, authenticated, logout } = usePrivy();
 
   return (
     <>
@@ -204,7 +203,9 @@ export function Navbar({ links }: NavbarProps) {
                     <Wallet className="w-4 h-4" />
                     {isConnecting ? "Connecting..." : "Connect Wallet"}
                   </button>
-                  <LoginButton />
+                  <div className="hidden md:block">
+                    <LoginButton />
+                  </div>
                 </>
               )}
 
@@ -223,8 +224,6 @@ export function Navbar({ links }: NavbarProps) {
             </div>
           </div>
         </div>
-
-        {/* Error Message */}
       </nav>
 
       {/* Mobile Menu */}
@@ -286,19 +285,33 @@ export function Navbar({ links }: NavbarProps) {
                 )
               )}
 
-              {/* Mobile Connect Wallet */}
+              {/* Mobile Connect Section */}
               <div className="pt-3 border-t border-slate-800">
-                {isConnected && address ? (
+                {/* Check if EITHER wallet is connected OR Google is authenticated */}
+                {(isConnected && address) ||
+                (authenticated && user?.wallet?.address) ? (
                   <div className="space-y-2">
+                    {/* Wallet Info */}
                     <div className="px-4 py-2.5 bg-slate-800/50 rounded-lg">
-                      <p className="text-xs text-slate-400">Connected</p>
-                      <p className="text-sm text-white font-mono mt-1">
-                        {formatAddress(address)}
+                      <p className="text-xs text-slate-400">
+                        {isConnected ? "Wallet Connected" : "Google Wallet"}
                       </p>
+                      <p className="text-sm text-white font-mono mt-1">
+                        {formatAddress(address || user?.wallet?.address || "")}
+                      </p>
+                      {authenticated && user?.google?.email && (
+                        <p className="text-xs text-slate-400 mt-2">
+                          Google: {user.google.email}
+                        </p>
+                      )}
                     </div>
+
+                    {/* Copy Address */}
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText(address);
+                        navigator.clipboard.writeText(
+                          address || user?.wallet?.address || ""
+                        );
                         setMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors"
@@ -306,10 +319,14 @@ export function Navbar({ links }: NavbarProps) {
                       <Clipboard className="w-4 h-4" />
                       Copy Address
                     </button>
+
+                    {/* View Explorer */}
                     <button
                       onClick={() => {
                         window.open(
-                          `https://etherscan.io/address/${address}`,
+                          `https://etherscan.io/address/${
+                            address || user?.wallet?.address
+                          }`,
                           "_blank"
                         );
                         setMenuOpen(false);
@@ -319,29 +336,54 @@ export function Navbar({ links }: NavbarProps) {
                       <ExternalLink className="w-4 h-4" />
                       View Explorer
                     </button>
-                    <button
-                      onClick={() => {
-                        disconnect();
-                        setMenuOpen(false);
-                      }}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
-                    >
-                      <Power className="w-4 h-4" />
-                      Disconnect
-                    </button>
+
+                    {/* Disconnect Buttons */}
+                    {isConnected && (
+                      <button
+                        onClick={() => {
+                          disconnect();
+                          setMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                      >
+                        <Power className="w-4 h-4" />
+                        Disconnect Wallet
+                      </button>
+                    )}
+
+                    {authenticated && (
+                      <button
+                        onClick={() => {
+                          logout();
+                          setMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                      >
+                        <Power className="w-4 h-4" />
+                        Logout Google
+                      </button>
+                    )}
                   </div>
                 ) : (
-                  <button
-                    onClick={() => {
-                      handleConnect();
-                      setMenuOpen(false);
-                    }}
-                    disabled={isConnecting}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 primary-button rounded text-center font-medium text-sm transition-all"
-                  >
-                    <Wallet className="w-4 h-4" />
-                    {isConnecting ? "Connecting..." : "Connect Wallet"}
-                  </button>
+                  /* Show both buttons when not connected */
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => {
+                        handleConnect();
+                        setMenuOpen(false);
+                      }}
+                      disabled={isConnecting}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 primary-button rounded text-center font-medium text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Wallet className="w-4 h-4" />
+                      {isConnecting ? "Connecting..." : "Connect Wallet"}
+                    </button>
+
+                    {/* Google Login Button with full width */}
+                    <div className="">
+                      <LoginButton />
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

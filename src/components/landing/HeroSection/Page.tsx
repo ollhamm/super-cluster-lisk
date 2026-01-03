@@ -1,43 +1,66 @@
 "use client";
 import Geometri from "@/components/landing/Geometri";
 import Link from "next/link";
+import { useNetworkInfo } from "@/contexts/NetworkInfoContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function HeroSection() {
+  const { isOpen } = useNetworkInfo();
+
   return (
     <>
       <section id="hero">
         <Geometri>
           <div className="relative h-[80vh] max-w-7xl mx-auto">
-            {/* Total Value Locked - Kanan Atas */}
-            <div className="absolute top-3 md:top-6 right-4 md:right-12 text-right">
-              <p className="text-sm md:text-lg text-slate-400 mb-1">APY*</p>
-              <h3 className="text-lg md:text-2xl font-bold text-[#0b84ba]">
-                $22,203,123,87
-              </h3>
-            </div>
+            <AnimatePresence>
+              {!isOpen && (
+                <motion.div
+                  initial={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="h-full"
+                >
+                  {/* Total Value Locked - Kanan Atas */}
+                  <div className="absolute top-3 md:top-6 right-4 md:right-6 text-right">
+                    <p className="text-sm md:text-lg text-slate-400 mb-1">
+                      TVL*
+                    </p>
+                    <h3 className="text-lg md:text-2xl font-bold text-[#0b84ba]">
+                      $22,203,123,87
+                    </h3>
+                  </div>
 
-            {/* Main Content - Center */}
-            <div className="flex flex-col justify-center items-center h-full text-center px-4 md:px-4">
-              <span className="text-gray-400 text-sm md:text-base md:flex hidden ">
-                Decentralized liquid stablecoin savings protocol with
-                auto-compounding yields and full DeFi composability
-              </span>
-              <h1 className="text-3xl md:text-5xl max-w-full md:max-w-4xl font-normal text-gray-300">
-                Optimized yield for stablecoin holders Designed for performance
-                and risk control
-              </h1>
-            </div>
+                  {/* Main Content - Center */}
+                  <div className="flex flex-col justify-center items-center h-full text-center px-4 md:px-4">
+                    <span className="text-gray-400 text-sm md:text-base md:flex hidden ">
+                      Decentralized liquid stablecoin savings protocol with
+                      auto-compounding yields and full DeFi composability
+                    </span>
+                    <h1 className="text-3xl md:text-5xl max-w-full md:max-w-4xl font-normal text-gray-300">
+                      Optimized yield for stablecoin holders Designed for
+                      performance and risk control
+                    </h1>
+                  </div>
 
-            {/* Active Positions - Kiri Bawah */}
-            <div className="absolute bottom-3 md:bottom-6 left-4 md:left-12 text-left">
-              <p className="text-sm md:text-lg text-slate-400 mb-1">APR*</p>
-              <h3 className="text-lg md:text-2xl font-bold text-[#0b84ba]">
-                12.34%
-              </h3>
-            </div>
+                  {/* Active Positions - Kiri Bawah */}
+                  <div className="absolute bottom-3 md:bottom-6 left-4 md:left-6 text-left">
+                    <p className="text-sm md:text-lg text-slate-400 mb-1">
+                      APR*
+                    </p>
+                    <h3 className="text-lg md:text-2xl font-bold text-[#0b84ba]">
+                      12.34%
+                    </h3>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </Geometri>
       </section>
+      <section
+        id="about"
+        className="py-12 flex items-center justify-center"
+      ></section>
       <section className="py-20 flex items-center justify-center">
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center w-full">

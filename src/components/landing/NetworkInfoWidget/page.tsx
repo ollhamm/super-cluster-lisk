@@ -3,9 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Network, ExternalLink, Droplets, X } from "lucide-react";
 import Link from "next/link";
+import { useNetworkInfo } from "@/contexts/NetworkInfoContext";
 
 export default function NetworkInfoWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useNetworkInfo();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollPositionRef = useRef(0);
 
@@ -128,7 +129,7 @@ export default function NetworkInfoWidget() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/30 z-40"
             />
 
             {/* Panel */}
@@ -137,31 +138,8 @@ export default function NetworkInfoWidget() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white/10 backdrop-blur-2xl border-l border-white/10 z-[60] flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white/10 backdrop-blur-2xl border-l border-white/10 z-50 flex flex-col"
             >
-              {/* Header */}
-              <div className="flex-shrink-0 bg-black border-b border-white/10 p-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 border border-white/30 rounded flex items-center justify-center">
-                    <Network className="w-5 h-5 text-[#0b84ba]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-slate-200">
-                      Network Information
-                    </h3>
-                    <p className="text-sm text-slate-400">
-                      {process.env.NEXT_PUBLIC_NETWORK_NAME}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-slate-400" />
-                </button>
-              </div>
-
               {/* Content - Scrollable */}
               <div
                 ref={scrollContainerRef}
