@@ -548,7 +548,7 @@ export default function TokenMechanicsSection() {
               </div>
 
               {/* Mind Map */}
-              <div className="bg-black md:border md:border-slate-700 rounded overflow-hidden">
+              <div className="bg-black border border-slate-700 rounded overflow-hidden">
                 <div className="h-100">
                   <ReactFlow
                     nodes={currentData.nodes}
