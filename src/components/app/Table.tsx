@@ -79,7 +79,7 @@ export function AssetTable({
 
   return (
     <>
-      <div className="space-y-2 p-2 bg-white/5 rounded border border-white/10">
+      <div className="space-y-2 p-2 bg-white/10 rounded border border-white/10">
         <AssetTableHeader
           sortField={sortField}
           sortDirection={sortDirection}

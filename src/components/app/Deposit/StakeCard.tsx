@@ -147,9 +147,9 @@ export function StakeCard({
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-slate-400">Selected pilot</span>
                 </div>
-                <div className="flex flex-col gap-3 rounded border border-white/20 bg-black p-4">
+                <div className="flex flex-col gap-3 rounded border border-white/10 bg-black/20 p-4">
                   <div className="flex flex-col gap-1">
-                    <span className="text-sm md:text-lg font-medium text-slate-200">
+                    <span className="text-lg text-gray-200">
                       {selectedPilotInfo?.name}
                     </span>
                     <Link

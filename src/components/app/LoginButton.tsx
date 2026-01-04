@@ -13,7 +13,7 @@ export default function LoginButton() {
   return (
     <button
       onClick={() => login()}
-      className="w-full flex items-center justify-center gap-2 px-4 py-3 primary-button rounded text-center font-medium text-sm transition-all"
+      className="w-full flex items-center justify-center cursor-pointer gap-2 px-4 py-3 primary-button rounded text-center font-medium text-sm transition-all"
     >
       <SiGoogle className="h-4 w-4" />
       Connect with Google

@@ -90,7 +90,7 @@ export default function RequestsList({
         </div>
       )}
 
-      <div className="bg-white/0 border border-white/10 rounded p-6 mb-6">
+      <div className="bg-black/20 border border-white/10 rounded p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <h3 className="text-slate-300 mb-2 border-b border-slate-200/10 pb-4">

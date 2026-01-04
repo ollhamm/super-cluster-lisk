@@ -43,7 +43,7 @@ export function FiltersBar({
       <div className="hidden md:flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px] bg-black border-white/10 text-gray-300 hover:bg-white/20">
+            <SelectTrigger className="w-[180px] bg-white/10 border-white/10 text-gray-300 hover:bg-white/5">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent className="bg-black border-white/10">
@@ -51,7 +51,7 @@ export function FiltersBar({
                 <SelectItem
                   key={category}
                   value={category}
-                  className="text-gray-300 focus:bg-white/20 hover:text-white hover:bg-white/10 focus:text-[#0b84ba]"
+                  className="text-gray-300 focus:bg-white/5 focus:border focus:border-white/10  focus:text-[#0b84ba]"
                 >
                   {category}
                 </SelectItem>

@@ -93,9 +93,9 @@ export function Navbar({ links }: NavbarProps) {
             {/* Left Section: Logo + Menu */}
             <div className="flex items-center gap-8">
               {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 group">
+              <div className="flex items-center gap-2 group">
                 <Image src="/logo1.png" alt="Logo" width={60} height={60} />
-              </Link>
+              </div>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-6">
@@ -198,7 +198,7 @@ export function Navbar({ links }: NavbarProps) {
                   <button
                     onClick={handleConnect}
                     disabled={isConnecting}
-                    className="hidden md:flex items-center justify-center px-4 py-3 primary-button rounded  text-center font-medium gap-1 text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="hidden md:flex items-center cursor-pointer justify-center px-4 py-3 primary-button rounded  text-center font-medium gap-1 text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Wallet className="w-4 h-4" />
                     {isConnecting ? "Connecting..." : "Connect Wallet"}

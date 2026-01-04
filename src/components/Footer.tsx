@@ -28,7 +28,7 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-3 text-md text-slate-400">
-          <span className="text-slate-400 shadow-sm">v 1.0</span>
+          <span className="text-slate-400 shadow-sm">V 0.1.0</span>
         </div>
       </div>
     </footer>

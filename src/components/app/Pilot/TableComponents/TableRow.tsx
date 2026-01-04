@@ -64,7 +64,7 @@ export function AssetRowDesktop({
         disabled
           ? "bg-slate-950/20 opacity-40 cursor-not-allowed"
           : isSelected
-          ? "bg-white/5 border-slate-700"
+          ? "bg-white/5 border-white/10"
           : "bg-white/5 hover:bg-white/10"
       }`}
       onClick={() => !disabled && onSelect()}

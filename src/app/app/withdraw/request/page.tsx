@@ -242,8 +242,8 @@ export default function WithdrawalsPage() {
     <div className="min-h-screen py-20 text-white pb-24">
       {/* No sUSDC Popup */}
       {showNoSUSDCPopup && (
-        <div className="fixed inset-0 bg-black/10 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
-          <div className="bg-white/10 border border-slate-700/50 rounded p-8 max-w-md w-full animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/60 border border-slate-700/50 rounded p-8 max-w-md w-full animate-in fade-in zoom-in duration-200">
             <div className="flex flex-col items-center text-center">
               {/* Icon */}
               <div className="w-16 h-16 border border-orange-500/20 rounded flex items-center justify-center mb-4">
@@ -251,7 +251,7 @@ export default function WithdrawalsPage() {
               </div>
 
               {/* Title */}
-              <h3 className="font-bold text-gray-200 text-2xl mb-3">
+              <h3 className="font-medium text-gray-200 text-2xl mb-3">
                 No sUSDC Available
               </h3>
 
@@ -264,14 +264,14 @@ export default function WithdrawalsPage() {
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <Link href="/app/deposit" className="flex-1">
-                  <Button className="w-full px-4 py-3 h-14 primary-button text-white font-medium text-md rounded transition-all duration-300 disabled:opacity-50">
+                  <Button className="w-full px-4 py-3 h-14 primary-button text-white text-sm rounded transition-all duration-300 disabled:opacity-50">
                     Go to Deposit
                   </Button>
                 </Link>
                 <Button
                   onClick={() => setShowNoSUSDCPopup(false)}
                   variant="outline"
-                  className="flex-1 sm:flex-none px-4 py-3 h-14 border-white/10 bg-white/20 hover:bg-white/10 text-slate-300 hover:text-slate-200 rounded transition-colors"
+                  className="flex-1 sm:flex-none px-4 py-3 h-14 text-sm border-white/10 bg-white/20 hover:bg-white/10 text-slate-300 hover:text-slate-200 rounded transition-colors"
                 >
                   Close
                 </Button>

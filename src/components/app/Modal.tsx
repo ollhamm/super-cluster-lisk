@@ -44,13 +44,13 @@ export function AssetModal({ isOpen, onClose, children }: AssetModalProps) {
       />
 
       {/* Modal container - flex centered */}
-      <div className="fixed inset-0 flex justify-center p-4">
+      <div className="fixed inset-0 flex items-center justify-center p-4">
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="asset-dialog-title"
           className={`relative w-full max-w-2xl max-h-[calc(100vh-2rem)]
-    overflow-y-auto transform overflow-hidden rounded-lg bg-black/30 backdrop-blur-xl border border-white/10 text-left shadow-xl transition-all duration-300 ease-out ${
+    overflow-y-auto transform overflow-hidden rounded-lg bg-white/5 backdrop-blur-xl border border-white/10 text-left shadow-xl transition-all duration-300 ease-out ${
       isAnimating
         ? "opacity-100 translate-y-0 scale-100"
         : "opacity-0 translate-y-4 scale-95"
