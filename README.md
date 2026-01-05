@@ -13,7 +13,7 @@
 
 ## What is SuperCluster
 
-SuperCluster is a decentralized liquid stablecoin savings protocol built on Mantle Testnet. The application allows users to:
+SuperCluster is a decentralized liquid stablecoin savings protocol built on . The application allows users to:
 
 - Deposit USDC stablecoins and receive yield-bearing sUSDC tokens
 - Wrap sUSDC into wsUSDC for DeFi composability
@@ -41,7 +41,7 @@ SuperCluster is a decentralized liquid stablecoin savings protocol built on Mant
 
 ### Network
 
-- Mantle Testnet (EVM-compatible L2)
+- (EVM-compatible L2)
 
 ### UI Components
 
@@ -455,16 +455,8 @@ NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
 # WalletConnect
 NEXT_PUBLIC_PROJECT_ID=your_walletconnect_project_id
 
-# Network Configuration (Mantle Testnet)
-NEXT_PUBLIC_CHAIN_ID=5003
-NEXT_PUBLIC_CHAIN_NAME=Mantle Testnet
-NEXT_PUBLIC_CHAIN_NETWORK=mantle-testnet
-NEXT_PUBLIC_RPC_URL=https://rpc.testnet.mantle.xyz
-NEXT_PUBLIC_BLOCK_EXPLORER_NAME=Mantle Explorer
-NEXT_PUBLIC_BLOCK_EXPLORER_URL=https://explorer.testnet.mantle.xyz
-
 # Chai Name Information
-NEXT_PUBLIC_NETWORK_NAME=Mantle Testnet
+NEXT_PUBLIC_NETWORK_NAME=
 
 # Contract Addresses
 NEXT_PUBLIC_SUPERCLUSTER_ADDRESS=0x...
@@ -498,18 +490,15 @@ The app uses dynamic network configuration from environment variables.
 **File:** `src/services/web3/wagmi/config.ts`
 
 ```typescript
-const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "5003");
-const chainName = process.env.NEXT_PUBLIC_CHAIN_NAME || "Mantle Testnet";
-const rpcUrl =
-  process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.testnet.mantle.xyz";
-const blockExplorerUrl =
-  process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL ||
-  "https://explorer.testnet.mantle.xyz";
+const chainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "");
+const chainName = process.env.NEXT_PUBLIC_CHAIN_NAME || "";
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "";
+const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL || "";
 
 export const defaultChain = {
   id: chainId,
   name: chainName,
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  nativeCurrency: { name: "", symbol: "", decimals: 18 },
   rpcUrls: {
     default: { http: [rpcUrl] },
     public: { http: [rpcUrl] },
@@ -613,18 +602,6 @@ export function useMyAction(address, chainId, embeddedWallet) {
 }
 ```
 
----
-
-## Resources
-
-- Next.js: https://nextjs.org/docs
-- Privy: https://docs.privy.io
-- Wagmi: https://wagmi.sh
-- Viem: https://viem.sh
-- Mantle: https://docs.mantle.xyz
-
----
-
 **Version:** 0.1.0  
-**Network:** Mantle Testnet  
+**Network:**  
 **Last Updated:** January 1, 2026
